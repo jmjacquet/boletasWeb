@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block extra_js %}
+		<script src="{% static 'js/selectTributo.js' %}" type="text/javascript" ></script>
+{% endblock %}
+
+
+{% block principal %}	
+	 {% if user.is_authenticated %}
+          <div class="row fondo-row">
+                <div class="col-xs-3 fondo-row">            
+	                {% include "logoMuni.html" %}            
+	                
+	                {% block menuizq %}
+	                {% endblock menuizq%}
+	                
+	                {% include "observaciones.html" %}
+                </div>
+
+                <div class="col-xs-9 mas-izq">
+	                {% block main %}
+	                {% endblock main%}
+                </div>
+          </div>                   
+
+          
+	 {% else %}
+	 {% block extra_css %}
+	    <link rel="stylesheet" href="{% static 'css/login.css'%}?{% now "Ymd"%}" type="text/css" />
+	    <link rel="stylesheet" href="{% static 'css/selectTributo.css' %}" type="text/css" />
+	 {% endblock %}
+	 
+	      <div class="row">
+	      		<div class="row vertical-offset-100">
+	                <div class="col-sm-4 col-sm-offset-4 col-xs-9 col-xs-offset-1">
+	                    <div class="panel panel-default">
+	                       
+	                        <div class="panel-body">
+	                            <div class="row-fluid user-row">
+	                                <a href="{{sitio.link_retorno}}"> <img title="Volver a la Página del Municipio" class="profile-img img-responsive" src="{% static 'munis/' %}{{dirMuni}}/logo_muni.png?{% now "Ymd"%}" alt="">
+	                                </a>
+	                            </div>
+	                            <form accept-charset="UTF-8" role="form" class="form-signin" action="/login/" method="post">
+	                                {% csrf_token %}
+	                                <fieldset>
+	                                    <label class="panel-login">
+	                                        <div class="login_result"></div>
+	                                    </label>
+	                                    <div class="form-group">	                                        
+                                           <div class="input-group">
+                                            <a class="btn btn-principal btn-primary btn-select btn-select-light">
+							                 <input type="hidden" class="btn-select-input" id="tributo" name="tributo" value="0" />
+							                 <span id="btn-select-value" required> Seleccionar Tributo </span>
+							                 <span class='btn-select-arrow glyphicon glyphicon-chevron-down  '></span>
+								             <ul>
+								                 {% for trib in tributos %}
+								                    <li value="{{ trib.id_tributo }}">{{ trib }}</li>
+								                 {% endfor %}
+							                 </ul>
+								             </a>                
+								           </div>  
+	                                    </div>         
+	                                    <div class="form-group">
+	                                        <div class="input-group">
+	                                            <input type="text" id="username" name="username" class="form-control" placeholder="Usuario/Nº Padrón/Partida" required autofocus>
+	                                            <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-user"></i></span>                                             
+	                                        </div>
+	                                    </div>
+	                                    <div class="form-group">	                                       
+	                                        	<div class="input-group " title="En el caso de que no posea Código de Seguridad ingrese sólo el Número de Padrón/Partida">
+	                                            <input type="password" name="password" class="form-control" placeholder="Contraseña/Código Seguridad">
+	                                            <span class="input-group-addon" id="basic-addon1" ><i class="fa fa-key"></i></span>                                             
+	                                        </div>
+	                                    </div>                                   
+	                            
+	                                    {% if messages %}
+	                                        {% for message in messages %}
+	                                            <div class="alert alert-danger alert-dismissible" role="alert">
+	                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	                                            <strong>{{ message|linebreaks }}</strong>
+	                                            </div>
+	                                        {% endfor %}
+	                                    {% endif %}                         
+	                                    
+	                                    <br>
+	                                    <a  id="email" class="list-group-item list-group-item-xs active botonesLogin" href="#" role="button" data-toggle="tooltip" data-placement="center" title="Ingrese un Usuario (Estudios Contables) y presione aquí para recibir su contraseña por correo electrónico.">Enviar contraseña por E-Mail (Estudios Contables)</a>
+	                                    <br>
+	                                    <a  class="list-group-item active botonesLogin" href="#modal_codigo" id="codigoInternet" role="button">¿Cómo/dónde obtener su Código de Seguridad?<i class="glyphicon glyphicon-question-sign pull-right"> </i></a>
+	                                    
+	                                    <br>
+	                                    <input class="btn btn-lg btn-principal btn-primary btn-block" type="submit" id="login" value="Ingresar »">
+	                                </fieldset>
+	                            </form>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+
+	            
+	      </div>
+	  {% endif %}
+		<div class="row">
+           {% include "footer.html" %}
+           {% include "modales.html" %}
+       </div>
+
+<script>
+$(document).ready(function(){ 
+	$("#email").click(function(){
+    	var $usr = $("input[name='username']").val();
+    	if ($usr == '')
+	           	{alert('El usuario no es válido.');}
+	    else{  
+    	$.ajax({
+	        url: "/estudios/passwd/"+$usr,
+	        type: "get", // or "get"       
+	        success: function(data) {
+	              alert(data);
+        }});}    
+     });
+ 
+});
+</script>
+
+{% endblock principal %}
+
+
+		

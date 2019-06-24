@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block principal %}   
+          <div class="row fondo-row">
+
+                <div class="col-xs-12 mas-izq">
+                    <div class="col-xs-12 ">
+
+
+                        <div class="panel panel-primary">
+                          <div class="panel-heading text-center"> 
+                             <b>Búsqueda de Liquidaciones / Boletas DReI ON-Line</b>
+                          </div>
+                          <div class="panel-body"> 
+                           <form accept-charset="UTF-8" role="form" action="" method="post" >
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-sm-4"> {% bootstrap_field form.contribuyente  %}</div>                  
+                                <div class="col-sm-2"> {% bootstrap_field form.padron  %}</div>
+                                <div class="col-sm-2"> {% bootstrap_field form.anio  %}</div>
+                                <div class="col-sm-2"> {% bootstrap_field form.mes  %}</div>
+                                <div class="col-sm-2"><input type="submit" name="submit" value="Buscar" class="btn btn-primary boton btn-lg pull-right btnBusq"></div>
+                            </div>
+                           
+                          </div>
+                        </div>
+                        <div class="panel panel-primary">
+                        <div class="panel-body"> 
+                            {% if boleta_detalles %}
+                                <button value="Imprimir" name="submit" type="submit" class="btn btn-primary btn-sm" style="float:right;margin-right:5px;margin-bottom:10px;">
+                                <i class="fa fa-print fa-fw"></i>  Imprimir</button>    
+                            {% endif %}
+                            </form>
+                            {% regroup boleta_detalles by id_boleta as lista_boletas %}
+                            {% for boleta in lista_boletas %}       
+                            <table class="table table-condensed tablaPadrones">
+                                <thead>
+                                    <tr>
+                                        <th class="importe" width="80px;">Padrón</th>
+                                        <th>Año</th>
+                                        <th>Mes</th>
+                                        <th width="200px;">Contribuyente</th>
+                                        <th>F.Carga</th>
+                                        <th class="importe">Der.Neto</th>
+                                        <th class="importe">TasaS.Públ.</th>
+                                        <th>Adicional</th>
+                                        <th class="importe">MontoAdic.</th>
+                                        <th class="importe">Retenciones</th>
+                                        <th class="importe">Mín.Global</th>
+                                        <th class="importe">Recargos</th>          
+                                        <th class="importe">Total</th>            
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>                                  
+                                                                           
+                                            <tr>
+                                                <td class="importe">{{ boleta.list.0.id_boleta__id_cuota__padron }}</td>
+                                                <td>{{ boleta.list.0.id_boleta__anio }}</td>
+                                                <td>{{ boleta.list.0.id_boleta__mes }}</td>
+                                                <td class="text-left">{{ boleta.list.0.id_boleta__id_cuota__id_responsable__nombre }}</td>
+                                                <td>{{ boleta.list.0.id_boleta__fechapago|date:"d/m/Y" }}</td>
+                                                <td class="importe">${{ boleta.list.0.id_boleta__derecho_neto|default_if_none:'0' }}</td>
+                                                <td class="importe">${{ boleta.list.0.id_boleta__tasa_salud_publ|default_if_none:'0' }}</td>
+                                                <td class="importe">{{ boleta.list.0.id_boleta__adic_detalle|default_if_none:'' }}</td>
+                                                <td class="importe">${{ boleta.list.0.id_boleta__adic_monto|default_if_none:'0' }}</td>
+                                                <td class="importe">${{ boleta.list.0.id_boleta__retenciones|default_if_none:'0' }}</td>
+                                                <td class="importe">${{ boleta.list.0.id_boleta__minimo_global|default_if_none:'0' }}</td>
+                                                <td class="importe">${{ boleta.list.0.id_boleta__recargo|default_if_none:'0' }}</td>
+                                                <td class="importe"><strong>$ {{ boleta.list.0.id_boleta__total|default_if_none:'0' }}</strong></td>                                                
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"></td>
+                                                <td colspan="10">
+                                                    <table class="table table-condensed tablaActividades">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Actividad</th>
+                                                            <th style="width:100px;">Base</th>
+                                                            <th class="importe" style="width:80px;">Alícuota <small>{{sitio.alicuota_unidad}}</small></th>
+                                                            <th class="importe" style="width:100px;">Impuesto</th>                                                                        
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>                                                        
+                                                    {% for item in boleta.list %}
+                                                    <tr>
+                                                        <td class="text-left">{{ item.activ_descr|default_if_none:'' }}</td>
+                                                        <td class="importe">${{ item.base|default_if_none:'0' }}</td>
+                                                        <td class="importe">{{ item.alicuota|default_if_none:'0' }}</td>                                                       
+                                                        <td class="importe">${{ item.impuesto|default_if_none:'0' }}</td>
+
+                                                    </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                                </td>
+                                            </tr>
+                                         
+                                </tbody>
+                            </table> 
+                            {% endfor %}  
+                        </div>        
+                        
+                        <div class="panel-footer text-right">     
+                            {% if boletas %} 
+                                <b>{{boletas.count}}</b> boletas encontradas.                
+                            {% else %}
+                                <b>No existen boletas para el padrón seleccionado.</b>
+                            {% endif %}
+                        </div>
+                        </div>    
+        
+                    </div>
+                </div>
+          </div>                   
+
+{% endblock principal %} 
+
+
+
+
+
+
+
+
+

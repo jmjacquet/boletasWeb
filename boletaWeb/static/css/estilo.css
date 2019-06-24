@@ -1,0 +1,217 @@
+body {
+      background-image: url("../images/fondo.jpg");
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: left top;
+      background-size: cover;
+    }
+
+.grande {
+     font-family: 'bebas'!important;
+     font-size: 52px;
+     margin-top:2px;
+     margin-bottom:2px;
+        }
+
+.navbar-btn {
+   margin-top: 12px;
+    margin-bottom: 1px;
+    margin-right: 8px;
+}
+
+
+.navbar-nav li{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.list-group 
+{
+    text-align:left;
+    font-size: 12px;
+    margin-top:5px;
+    margin-bottom:5px;
+    color:#080808;
+    box-shadow: 0 0 5px #000;
+}
+
+a.list-group-item.active
+{
+    text-align:center;
+    font-size: 11px;
+}
+
+
+.listado-pie
+{
+    text-align:right;
+    padding: 3px;
+    font-size: 11px;
+    margin-top:5px;
+    margin-bottom:5px;
+    background-color: #428bca;
+    border-color: #428bca;
+    border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    color:#FFFFFF;
+    box-shadow: 0 0 5px #000;
+
+}
+
+.list-group2
+{
+    font-size: 15px;
+    margin-top:5px;
+    margin-bottom:10px;
+    box-shadow: 0 0 5px #000;
+    //font-family: 'bebas'!important;
+}
+
+
+.well {
+  color:#999999;
+  min-height: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-top:5px;
+  
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.well blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.well-lg {
+  padding: 24px;
+  border-radius: 6px;
+}
+
+.well-sm {
+  padding: 9px;
+  border-radius: 3px;
+}
+
+.tbody
+{ color:white;
+    }
+
+.account-wall
+{
+    padding: 20px 0px 20px 0px;
+    //background-color: #f7f7f7;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.comboPadrones
+{
+   width:70%;
+
+}
+
+.formBusqueda
+{
+width: 80%;
+height: 34px;
+padding: 6px 8px;
+font-size: 13px;
+line-height: 1;
+color: #000000;
+vertical-align: middle;
+background-color: #ffffff;
+background-image: none;
+border: 1px solid #cccccc;
+border-radius: 4px;
+-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+-webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+
+}
+.logo_muni {        
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  width: 100%;
+  vertical-align: middle;
+  box-shadow: 0 0 5px #000;
+        border-radius: 10px 10px;       
+        border: 5px outset #428bca;     
+}
+
+.loading{display:none;position:absolute;top:0;height:100%;width:100%;background-color:rgba(0,0,0,0.7);text-align:center;margin-left:-15px}
+.loading h2{font-family:'Bebas';color:#fff;margin-top:150px}
+.loading img{width:70px}
+
+
+.formularios {        
+  font-size: 12px;
+}
+
+
+
+.progress {
+  position: relative;
+  color:white;
+padding-top:1px;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: white;
+}
+
+.badge-danger {
+  background-color: #d43f3a;
+}
+
+.badge-warning {
+  background-color: #d58512;
+}
+
+.badge-success {
+  background-color: #398439;
+}
+
+.badge-info {
+  background-color: #428bca;
+}
+
+.badge-inverse {
+  background-color: #333333;
+}
+
+#divCargando {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  /*position: fixed;
+  display: block;*/
+  opacity: 0.7;
+  background-color: #fff;
+  z-index: 99;
+  text-align: center;
+}
+
+#imgCargando {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+}
+
+
+.input-group-addon2 {   
+    background-color: red;    
+}

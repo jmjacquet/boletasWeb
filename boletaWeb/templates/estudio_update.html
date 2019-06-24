@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+{% load bootstrap3 %}
+
+{% block main %}
+<div class="col-xs-12 ">
+
+    <div class="list-group2">
+        <a href="#" class="list-group-item active">
+            <b>Modificación de Datos del Estudio</b>         
+        </a>
+   </div>
+   <form method="post" class="form" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form  %}
+    {% buttons %}
+        <button href="/" class="btn btn-default btn-md pull-left">
+           Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary btn-md pull-right">
+           Guardar
+        </button>
+    {% endbuttons %}
+	</form>
+</div>
+{% endblock main %}

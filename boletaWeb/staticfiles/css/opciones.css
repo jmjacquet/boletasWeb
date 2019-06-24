@@ -1,0 +1,10 @@
+.opciones{height:90%;margin-top:10px;margin-bottom:10px}.opciones h3{font-family:'Bebas';font-size:14px;margin-top:10px;margin-bottom:3px;text-align:center}
+.opciones detalle{margin-top:10px;margin-bottom:10px;padding:4px;font-size:12px}
+.opciones .boton{width:100%;padding:4px;margin-top:5px;text-align:right;font-size:13px}
+.opciones .listado{width:100%;margin-top:2px}.opciones .listado .dropdown-toggle{width:100%;text-align:right;font-size:13px;padding:4px}.opciones .listado .dropdown-toggle .caret{text-align:right}
+.opciones .desde,.opciones .hasta{width:47%!important}
+.opciones .desde{margin-right:4%}
+.opciones .destacado{background-color:#eee;padding:5px;padding-left:15px;padding-right:15px;margin-left:-15px;margin-right:-15px}.opciones .destacado h2,.opciones .destacado h3,.opciones .destacado p{margin:0}
+.opciones .dropdown-menu>li>a{padding:0px 20px;font-size:1.2 rem;cursor:pointer}
+.opciones #loading{display:none;position:absolute;top:0;height:100%;width:100%;background-color:rgba(0,0,0,0.7);text-align:center;margin-left:-15px}.opciones #loading h2{font-family:'Bebas';color:#fff;margin-top:150px}
+.opciones #loading img{width:70px}

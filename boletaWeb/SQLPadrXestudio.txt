@@ -1,0 +1,9 @@
+SELECT c.*,r.nombre as nombreResp,t.abreviatura as tipoTributo,
+(select count(cc.id_cuota) from cuotas cc where ((cc.id_padron=c.id_padron)and(cc.fechapago is null))) as CantDeuda,
+(select sum(cc2.saldo) from cuotas cc2 where ((cc2.id_padron=c.id_padron)and(cc2.fechapago is null))) as Deuda
+FROM dri_estudio_padron dep
+JOIN cuotas c on (c.id_padron=dep.id_padron)
+JOIN tributo t on (c.tributo=t.id_tributo)
+JOIN responsables r on (r.id_responsable=c.id_responsable)
+WHERE (dep.id_estudioc =  %s)and(t.id_tributo=6) 
+GROUP BY c.id_padron,c.padron order by r.nombre,c.padron

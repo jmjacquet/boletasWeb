@@ -1,0 +1,243 @@
+{% load static from staticfiles %}
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="es">
+<head>
+<link rel="stylesheet" href="{% static 'css/boletas.css' %}" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Liquidación</title>
+</head>
+<body>
+<table width="100%" height="723" border="0" cellspacing="0">
+  <tr>
+    <td width="30%" height="83" align="center"><img src="{% static 'munis/' %}{{dirMuni}}/logo_boleta.png" alt="InfoMunicipio"
+		width="62" height="62" /></td>
+  <td width="40%" align="center" valign="middle"><p><span class="comuna_nombre">{{sitio.nombre}}</span><br />
+    <span class="comuna_datos">{{sitio.direccion}}<br />
+        {{sitio.varios1}}</span></p>
+  </td>
+    <td width="30%" align="right" valign="top" class="destino_cuerpo">{{sitio.ncuerpo1}}</td>
+  </tr>
+ <tr valign="middle" >
+     <td  colspan="3" valign="middle" class="tituloBoleta"> Boleta {{cuota.tributo}}  </td>   
+  </tr>
+  <tr>
+    <td height="98" colspan="3" align="left" valign="middle">
+      <table width="100%" border="0" cellspacing="0" valign="middle">
+      <tr>
+        <td width="20%" class="titulos">Padrón/Cuenta</td>
+        <td colspan="2" class="titulos">Razón Social</td>
+        <td width="18%" class="titulos">Tributo</td>
+        <td width="18%" class="titulos">Código Seguridad</td>
+      </tr>
+      <tr>
+        <td class="datos">{{cuota.padron}}</td>
+        <td colspan="2" class="datos">{{cuota.id_responsable.nombre_boleta}}</td>
+        <td class="datos">{{cuota.tributo.abreviatura}}</td>
+        <td width="18%" class="datos">{{codseg}}</td>
+      </tr> 
+      <tr>     
+        <td class="titulos">Año</td>
+        <td width="20%" class="titulos">Período</td>
+        <td width="20%" class="titulos">Vencimiento</td>
+        <td width="22%" class="titulos">Importe Orig.</td>
+        <td class="titulos">Nro. Cuota</td>
+      </tr>
+      <tr>
+        <td class="datos">{{cuota.anio}}</td>
+        <td class="datos">{{cuota.cuota}}</td>
+        <td class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+        <td class="importe">$ {{cuota.saldo}}</td>
+        <td class="datos">{{cuota.id_cuota}}</td>
+      </tr>
+      <tr>
+        <td class="titulos"></td>
+        <td class="titulos">Fecha</td>
+        <td class="titulos">Punitorios</td>
+        <td class="titulos">Importe</td>
+        <td class="titulos">{% if codLINK %}Pago Electrónico {% endif %}</td>
+      </tr>
+      <tr>
+        <td class="titulo_vencimiento">1er. Vencimiento</td>
+        <td class="datos">{{vencimiento|date:"d/m/Y"}}</td>
+        <td class="datos">$ {{porc1}}</td>
+        <td class="importe">$ {{punit1}}</td>
+        <td class="datos">{{codLINK}}</td>
+        </tr>
+      <tr>
+        <td class="titulo_vencimiento">2do. Vencimiento</td>
+        <td class="datos">{{vencimiento2|date:"d/m/Y"}}</td>
+        <td class="datos">$ {{porc2}}</td>
+        <td class="importe">$ {{punit2}}</td>
+        </tr>
+     </table>
+   <br>
+  <tr>
+    <td height="80" colspan="3" align="center" >
+      <img src="data:image/png;base64,{{codbar}}" class="CB" >      
+      </td>
+   </tr>
+
+   <tr>
+    <td height="80" colspan="3" align="center" valign="middle" >     
+      {{codigo}}
+      <br>
+      <hr>
+      <br>
+      </td>
+   </tr>   
+   
+  <tr>
+    <td width="30%" height="83" align="center"><img src="{% static 'munis/' %}{{dirMuni}}/logo_boleta.png" alt="InfoMunicipio"
+    width="62" height="62" /></td>
+<td width="40%" align="center" valign="middle"><p><span class="comuna_nombre">{{sitio.nombre}}</span><br />
+  <span class="comuna_datos">{{sitio.direccion}}<br />
+        {{sitio.varios1}}</span></p>
+  </td>
+    <td width="30%" align="right" valign="top" class="destino_cuerpo">{{sitio.ncuerpo2}}</td>
+  </tr>
+
+  <tr>
+    <td height="98" colspan="3" align="left" valign="middle"><br>
+      <table width="100%" border="0" cellspacing="0" valign="middle">
+      <tr>
+        <td width="20%" class="titulos">Padrón/Cuenta</td>
+        <td colspan="2" class="titulos">Razón Social</td>
+        <td width="18%" class="titulos">Tributo</td>
+        <td width="18%" class="titulos">Código Seguridad</td>
+      </tr>
+      <tr>
+        <td class="datos">{{cuota.padron}}</td>
+        <td colspan="2" class="datos">{{cuota.id_responsable.nombre_boleta}}</td>
+        <td class="datos">{{cuota.tributo.abreviatura}}</td>
+        <td width="18%" class="datos">{{codseg}}</td>
+      </tr> 
+      <tr>
+        <td class="titulos">Año</td>
+        <td width="20%" class="titulos">Período</td>
+        <td width="20%" class="titulos">Vencimiento</td>
+        <td width="22%" class="titulos">Importe Orig.</td>
+        <td class="titulos">Nro. Cuota</td>
+      </tr>
+      <tr>
+        <td class="datos">{{cuota.anio}}</td>
+        <td class="datos">{{cuota.cuota}}</td>
+        <td class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+        <td class="importe">$ {{cuota.saldo}}</td>
+        <td class="datos">{{cuota.id_cuota}}</td>
+      </tr>
+      <tr>
+        <td class="titulos"></td>
+        <td class="titulos">Fecha</td>
+        <td class="titulos">Punitorios</td>
+        <td class="titulos">Importe</td>
+        <td class="titulos">Pago Electrónico</td>
+      </tr>
+      <tr>
+        <td class="titulo_vencimiento">1er. Vencimiento</td>
+        <td class="datos">{{vencimiento|date:"d/m/Y"}}</td>
+        <td class="datos">$ {{porc1}}</td>
+        <td class="importe">$ {{punit1}}</td>        
+        <td class="datos">{{codLINK}}</td>
+        </tr>
+      <tr>
+        <td class="titulo_vencimiento">2do. Vencimiento</td>
+        <td class="datos">{{vencimiento2|date:"d/m/Y"}}</td>
+        <td class="datos">$ {{porc2}}</td>
+        <td class="importe">$ {{punit2}}</td>
+        </tr>
+     </table>
+  <br>
+  <tr>
+    <td height="80"  colspan="3" align="center" >
+      <img src="data:image/png;base64,{{codbar}}" class="CB">      
+      </td>
+   </tr>
+
+   <tr>
+   <br>
+    <td height="80"  colspan="3" align="center" valign="middle" >     
+      {{codigo}}
+      <br>
+      <hr>
+      <br>
+      </td>
+   </tr>   
+     
+   <tr>
+    <td width="30%" height="83" align="center"><img src="{% static 'munis/' %}{{dirMuni}}/logo_boleta.png" alt="InfoMunicipio"
+    width="62" height="62" /></td>
+<td width="40%" align="center" valign="middle"><p><span class="comuna_nombre">{{sitio.nombre}}</span><br />
+  <span class="comuna_datos">{{sitio.direccion}}<br />
+        {{sitio.varios1}}</span></p>
+  </td>
+    <td width="30%" align="right" valign="top" class="destino_cuerpo">{{sitio.ncuerpo3}}</td>
+  </tr>
+
+  <tr>
+    <td height="98" colspan="3" align="left" valign="middle">
+      <table width="100%" border="0" cellspacing="0" valign="middle">
+      <tr>
+        <td width="20%" class="titulos">Padrón/Cuenta</td>
+        <td colspan="2" class="titulos">Razón Social</td>
+        <td width="18%" class="titulos">Tributo</td>
+        <td width="18%" class="titulos">Código Seguridad</td>
+      </tr>
+      <tr>
+        <td class="datos">{{cuota.padron}}</td>
+        <td colspan="2" class="datos">{{cuota.id_responsable.nombre_boleta}}</td>
+        <td class="datos">{{cuota.tributo.abreviatura}}</td>
+        <td width="18%" class="datos">{{codseg}}</td>
+      </tr> 
+      <tr>
+        <td class="titulos">Año</td>
+        <td width="20%" class="titulos">Período</td>
+        <td width="20%" class="titulos">Vencimiento</td>
+        <td width="22%" class="titulos">Importe Orig.</td>
+        <td class="titulos">Nro. Cuota</td>
+      </tr>
+      <tr>
+        <td class="datos">{{cuota.anio}}</td>
+        <td class="datos">{{cuota.cuota}}</td>
+        <td class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+        <td class="importe">$ {{cuota.saldo}}</td>
+        <td class="datos">{{cuota.id_cuota}}</td>
+      </tr>
+      <tr>
+        <td class="titulos"></td>
+        <td class="titulos">Fecha</td>
+        <td class="titulos">Punitorios</td>
+        <td class="titulos">Importe</td>
+        <td class="titulos">Pago Electrónico</td>
+      </tr>
+      <tr>
+        <td class="titulo_vencimiento">1er. Vencimiento</td>
+        <td class="datos">{{vencimiento|date:"d/m/Y"}}</td>
+        <td class="datos">$ {{porc1}}</td>
+        <td class="importe">$ {{punit1}}</td>
+        <td class="datos">{{codLINK}}</td>
+        </tr>
+      <tr>
+        <td class="titulo_vencimiento">2do. Vencimiento</td>
+        <td class="datos">{{vencimiento2|date:"d/m/Y"}}</td>
+        <td class="datos">$ {{porc2}}</td>
+        <td class="importe">$ {{punit2}}</td>
+
+        </tr>
+     </table>
+     <br> 
+  <tr>
+    <td height="80" colspan="3" align="center" >
+      <img src="data:image/png;base64,{{codbar}}" class="CB" >      
+      </td>
+   </tr>
+
+   <tr>
+    <td height="80" colspan="3" align="center" valign="middle">     
+      {{codigo}}
+      </td>
+   </tr>   
+</table>
+
+</body>
+</html>

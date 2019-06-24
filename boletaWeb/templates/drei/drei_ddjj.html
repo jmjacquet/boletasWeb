@@ -1,0 +1,157 @@
+{% extends "cuotas.html" %}
+
+{% load static from staticfiles %}
+{% load filtros %}
+{% block extra_js %}
+ <script src="{% static 'js/scriptDDJJ.js' %}" type="text/javascript"></script>
+{% endblock %}
+{% block main %}
+<div class="col-xs-12 ">
+
+<form action="." method="post" >
+            
+            {% csrf_token %}
+           
+          
+    <div class="list-group2">
+        <a  class="list-group-item active">
+            <b>DDJJ Anual de DReI</b>
+        </a>
+    </div>
+    <div class="datagrid">
+    <table>      
+      <input type='hidden' name="id_cuota" value="{{ cuota.id_cuota }}" />
+      {{ periodos_formset.management_form }}
+      <input type='hidden' name="alicuota_coeficiente" value="{{ sitio.alicuota_coeficiente }}" />  
+      {% for formp in periodos_formset.forms %}
+        {% if forloop.first %}
+            <thead>
+                <th>Período</th>
+                <th>Detalle Actividad</th>
+                <th>Base</th>  
+                <th>Alicuota <small>{{sitio.alicuota_unidad}}</small></th>  
+                <th>Minimo</th>  
+                <th>Adicionales</th>                  
+                <th>Total</th> 
+            </thead>
+            <tfoot>
+                <tr>
+                    <td></td><td></td><td></td><td></td><td></td>   
+                    <td>SubTotal</td>  
+                    <td>$ <span class="Subtotal">0</span></td>  
+                </tr>
+            </tfoot>       
+            <tbody class="form-actividades" >
+        {% endif %}        
+                      
+            
+             {% ifchanged formp.periodo.value %}
+                <tr class='separacion'>
+                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td> 
+                </tr>                
+            {% endifchanged %}
+             <tr class="fila">
+              <td> 
+                  {{formp.periodo.value}} 
+              </td>
+              <td> 
+                  {{formp.activ_descr.value}} 
+              </td>
+              <td>
+                      
+                      <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        {{formp.base|default_if_none:"0" |addcss:"form-control"}} 
+                      </div>
+                      
+                      {{ formp.base.errors.as_ul }}
+              </td>
+              <td> {{formp.alicuota|default_if_none:"0.00" |addcss:"input-group2 form-control-corto form-control"}} {{ formp.alicuota.errors.as_ul }}</td>
+              <td> <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        {{formp.minimo|default_if_none:"0,00" |addcss:"form-control"}}
+                      </div>  {{ formp.minimo.errors.as_ul }}</td>
+              
+               <td>
+                      
+                      <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        {{formp.adicionales|default_if_none:"0" |addcss:"form-control"}} 
+                      </div>
+                      
+                      {{ formp.adicionales.errors.as_ul }}
+              </td>
+              <td> 
+                    <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input readonly="readonly"  class="form-control" name="totalActiv_{{forloop.counter0}}" value="0.00" />
+                    </div>
+              </td>
+                
+
+              {% for hidden in formp.hidden_fields %}
+                          {{ hidden }}
+                          {% endfor %}
+            
+            </tr>         
+
+        {% if forloop.last %}                     
+            </tbody>            
+        {% endif %}
+       
+    {% endfor %}
+    
+    </table> 
+     <table>      
+            <tfoot align='right'>
+                <tr>
+                    <td>
+                    <a class="btn btn-default btn-md pull-left" href="#" role="button" id="recalcularDDJJ"><i class="fa fa-refresh"></i> Recalcular</a>
+                    </td><td></td><td></td><td></td><td></td><td></td><td></td> <td></td>
+                    <td><h4><b>Total a Abonar: </b></h4></td>  
+                    <td><h4><b>$ <span class="totalFinal">0</span></b></h4></td>  
+                </tr>
+            </tfoot>       
+            <tbody class="form-adicionales" align='right'>
+                <tr> <td colspan="8"></td>
+                <td>
+                     <div class="input-group">
+                      <span class="input-group-addon">Total Imponible <strong>$</strong></span>
+                      {{form.total_imponible|addcss:"form-control"}}
+                      {{form.total_imponible.errors.as_ul }}
+                    </div>  
+                </td>
+                </tr>
+
+                <tr><td colspan="8"></td>
+                   <td>
+                    <div class="input-group">
+                      <span class="input-group-addon">Total Impuestos <strong>$</strong></span>
+                      {{form.total_impuestos|addcss:"form-control"}}
+                      {{form.total_impuestos.errors.as_ul }}
+                    </div> 
+                   </td>
+                </tr>
+                <tr><td colspan="8"></td>
+                   <td>
+                    <div class="input-group">
+                      <span class="input-group-addon">Total Adicionales <strong>$</strong></span>
+                      {{form.total_adicionales|addcss:"form-control"}}
+                      {{form.total_adicionales.errors.as_ul }}
+                    </div> 
+                   </td>                    
+                </tr>
+              
+            </tbody>            
+    </table> 
+    </div>
+     
+    <br>
+    <input type="submit" name="submit" value="Guardar" class="btn btn-primary pull-right">        
+
+</form>
+        
+</div>
+
+{% endblock main %}
+

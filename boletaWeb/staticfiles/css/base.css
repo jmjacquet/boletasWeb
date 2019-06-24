@@ -1,0 +1,66 @@
+@import "fuentes.css";
+@import "bootstrap.css";
+@import "header.css";
+@import "opciones.css";
+
+
+
+html,body{height:100%;width:100%;padding-top: 1em;}
+
+p{text-align:justify}
+a{font-size:12px}
+.footer{font-size:12px;width:99%;position:absolute;bottom:5px;height:-25px;ox-shadow:0 0 20px #000;text-align:center;color:#FFFFFF;background:rgba(255,255,255,0.3);padding-top:5px;padding-left:5px;padding-right:5px;padding-bottom:5px}
+.centered {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+.logo{font-family:'Bebas' !important;font-size:3rem;display:inline-block;margin-left:4rem}
+h1,
+h2,
+h3,
+h5,
+h6 {
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    font-family: 'Carme',sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+.container2{
+    /*margin-top: 10px;*/
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    background:rgb(0,0,0);
+    background:rgba(0,0,0,.4);
+    *background:transparent;
+    *filter:progid:DXImageTransform.Microsoft.gradient(startColorStr=#6F000000,endColorStr=#6F000000);
+    *-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#6F000000,endColorstr=#6F000000)";
+    }
+.fondo-row{
+    padding-top: 5px;
+    padding-left: 15px;
+}
+
+.mas-izq{
+    padding-left: 0px;
+}
+.mas-der{
+    padding-left: 0px;
+}
+
+.descr_activ{
+    border:none;
+    width: 100%;
+    resize:none;
+    vertical-align:middle;
+}

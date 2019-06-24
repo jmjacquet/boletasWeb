@@ -1,0 +1,357 @@
+begin
+  interes_entrada = :interes;
+
+  coeficiente_acum = 0;
+  if (:fecha_punitorios is null) then
+    fecha_punitorios = current_date;
+
+  select conf.fecha, conf.numero
+  from configuracion conf
+  where conf.clave = 'Crtl_Interes'
+  into :fecha_ctrl_int, :interes_ctrl;
+
+  if (fecha_ctrl_int is null) then
+    fecha_ctrl_int = '01/01/3000';
+
+  select c.saldo, c.emision, c.segundo_vencimiento
+  from cuotas c
+  where c.id_cuota = :id_cuota
+  into :saldo_cta, :fecha_emision, seg_vencimiento;
+
+  --si no tiene segundo vencimiento entonces le pongo el mismo que el primero
+  if (seg_vencimiento is null) then
+    seg_vencimiento = vencimiento;
+
+  --si no paso el importe como parametro
+    if (importe is null) then
+        importe = :saldo_cta;
+
+  --si no paso el INTERES como parametro
+  if ((interes_entrada is null) or (:interes_entrada < 0))  then
+  begin
+    --busco el tipo de interes para el tributo
+    select t.tipo_interes, t.interes, t.id_tributo, t.interes_2, t.vence_dias2, t.interes_2ven
+    from concepto c
+    join tributo t on (t.id_tributo = c.id_tributo)
+    where c.concepto = :concepto
+    into :tipo_interes, :interes, :tributo, :interes_2, :vence_dias2, :interes_2ven;
+
+    ------------------------------------------------------------------------
+    --  Si tipo_interes = 7
+    ------------------------------------------------------------------------
+    if (tipo_interes = 7) then
+    begin
+      select ps.id_servicios, c.segundo_vencimiento
+      from cuotas c
+      inner join padron_servicios ps on (c.id_padron = ps.id_padron)
+      where c.id_cuota = :id_cuota
+      into :id_servicio, :seg_vencimiento;
+
+      select s.interes_2ven, s.interes_punitorios
+      from servicios s
+      where s.id_servicios = :id_servicio
+      into :interes_2, :interes;
+
+      if (interes_2 is not null) then
+      begin
+        dv = :seg_vencimiento - :vencimiento;
+        if (dv >= 0) then --si la diferencia de dias es mayor o igual que 0 entonces calculo
+        begin
+          interes = interes_2 / 30;--Calculo el interes segun cantidad de dias entre el primer y seg vencimiento.
+          coeficiente = dv * interes;
+
+          coeficiente_acum = coeficiente;
+        end
+
+        dv = :fecha_punitorios - seg_vencimiento;
+        if (dv > 0) then --si la diferencia de dias es mayor que 0 entonces calculo
+        begin
+          interes = interes / 30;--paso el interes a diario
+          coeficiente = dv * interes;
+          coeficiente_acum = coeficiente_acum + coeficiente;
+        end
+
+        tipo_interes = 3;
+      end
+      else
+      begin
+        tipo_interes = null;
+      end
+    end
+
+    ------------------------------------------------------------------------
+    --  Si tipo_interes = 99
+    --     inserto hasta dos intereses interes_2, interes_3 pasados por variables
+    --     de la tabla tributo corro el vencimiento de la boleta hasta vence_dias2
+    --     o vence_dias3 para calcular de ahi en adelante el interes que esta en
+    --     la configuracion del sistema.
+    ------------------------------------------------------------------------
+    if (tipo_interes = 99) then
+    begin
+      if (interes is null) then
+      begin
+          select numero
+          from configuracion
+          where clave = 'INTERES'
+          into :interes;
+      end
+
+      dias = fecha_punitorios - vencimiento;
+
+      if ((:fecha_punitorios > :vencimiento) and (:fecha_punitorios <= :seg_vencimiento)) then
+      begin
+          coeficiente_acum = coeficiente_acum + interes;
+          fecha_punitorios = :seg_vencimiento;
+          vencimiento = :seg_vencimiento;
+      end
+
+      if ((:fecha_punitorios > :seg_vencimiento) and (:fecha_punitorios <= incdate(:vencimiento, :vence_dias2, 0, 0))) then
+      begin
+          coeficiente_acum = coeficiente_acum + :interes_2;
+          fecha_punitorios = incdate(:vencimiento, :vence_dias2, 0, 0);
+          vencimiento = incdate(:vencimiento, :vence_dias2, 0, 0);
+      end
+
+      if (:fecha_punitorios > incdate(:vencimiento, :vence_dias2, 0, 0)) then
+      begin
+          coeficiente_acum = coeficiente_acum + :interes_2;
+          vencimiento = incdate(:vencimiento, :vence_dias2, 0, 0);
+      end
+
+      interes_especial = 'S';
+      tipo_interes = null;
+    end
+
+    ------------------------------------------------------------------------
+    --  Si tipo_interes = 10
+    --     buscar y calcula el interes por rango de fechas,
+    --     luego pasa a tipo_interes = 3
+    ------------------------------------------------------------------------
+    if (tipo_interes = 10) then
+    begin
+      if (interes is null) then
+      begin
+          select numero
+          from configuracion
+          where clave = 'INTERES'
+          into :interes;
+      end
+
+      if (fecha_emision <= fecha_ctrl_int) then
+        interes = :interes_ctrl;
+
+      if ((:fecha_punitorios > :vencimiento) and (:fecha_punitorios <= :seg_vencimiento)) then
+      begin
+          dias = seg_vencimiento - vencimiento;
+          coef_calc = dias * (interes / 30);
+          coeficiente_acum = coeficiente_acum + coef_calc;
+      end
+      else
+      begin
+          for select ti.tipo_interes, ti.interes, ti.desde, ti.hasta
+          from tributo_interes ti
+          where id_tributo = :tributo
+            and ti.hasta >= :vencimiento
+            and ti.desde <= :fecha_punitorios
+          into :tipo_interes, :interes, :df, :hf
+          do
+          begin
+            if (hf > fecha_punitorios) then
+              hf = fecha_punitorios;
+    
+            if (vencimiento >= df and vencimiento <= hf) then
+              dias = hf - vencimiento;
+            else
+              dias = hf - df + 1;
+    
+            coef_calc = dias * interes / 30;
+            coeficiente_acum = coeficiente_acum + coef_calc;
+          end
+      end
+
+      tipo_interes = 3;
+    end
+
+    ------------------------------------------------------------------------
+    --  Si tipo_interes = 11
+    --     busca y calcula coeficiente para la fecha de vencimiento, luego
+    --     pasa a tipo_interes = 3
+    ------------------------------------------------------------------------
+    if (tipo_interes = 11) then
+    begin
+      for select ti.tipo_interes, ti.interes, ti.desde, ti.hasta
+      from tributo_interes ti
+      where id_tributo = :tributo
+        and ti.hasta >= :vencimiento
+        and ti.desde <= :vencimiento
+      into :tipo_interes, :interes, :df, :hf
+      do
+      begin
+        dias = :fecha_punitorios - vencimiento;
+        coeficiente_acum = dias * interes / 30;
+      end
+
+      tipo_interes = 3;
+    end
+
+    ------------------------------------------------------------------------
+    --  Si tipo_interes = 2
+    -- Es Diario, pero calculo a partir del segundo vencimiento
+    -- Si esta entre el primer y seg_vencimiento, coloco el interes al seg_vencimiento que esta en la tabla tributo
+    ------------------------------------------------------------------------
+    if (tipo_interes = 2) then
+    begin
+      if (interes is null) then
+      begin
+          select numero
+          from configuracion
+          where clave = 'INTERES'
+          into :interes;
+      end
+
+      dias = seg_vencimiento - vencimiento;
+
+      if (interes_2ven is null) then
+          coef_calc = dias * interes / 30;
+      else
+          coef_calc = dias * (interes_2ven / 100) / 30;
+
+      coeficiente_acum = coeficiente_acum + coef_calc;
+
+      if ((:fecha_punitorios > :vencimiento) and (:fecha_punitorios <= :seg_vencimiento)) then
+        vencimiento = fecha_punitorios;
+      else
+        if (:fecha_punitorios > :seg_vencimiento) then
+            vencimiento = seg_vencimiento;
+
+      interes_especial = 'S';
+      tipo_interes = 2;
+      -----------------------------------------------------------------------------------------------------------------
+    end
+
+    ------------------------------------------------------------------------
+    --  si tipo_interes es null
+    --     entonces me fijo en la tabla de configuracion
+    ------------------------------------------------------------------------
+    if (tipo_interes is null) then
+    begin
+      /* setea valores por defecto */
+      tipo_interes = 1;
+      interes = 0;
+
+      select numero
+      from configuracion
+      where clave = 'TIPO_INTERES'
+      into :tipo_interes;
+
+      select numero
+      from configuracion
+      where clave = 'INTERES'
+      into :interes;
+    end
+
+    if (:interes_entrada < 0) then
+       interes = :interes * (1 + :interes_entrada);
+  end
+  else   --si paso el INTERES como parametro
+  begin
+    if (tipo_interes is null) then
+    begin
+      tipo_interes = 1;
+
+      select numero
+      from configuracion
+      where clave = 'TIPO_INTERES'
+      into :tipo_interes;
+    end
+  end
+
+  --tipo_interes = 1 MENSUAL se cobra interes si cambio el mes */
+  if (tipo_interes = 1) then
+  begin
+    --calculo la cantidad de meses que pasaron entre la fecha de punitorios y la de vencimiento
+    mv = extract(month from :fecha_punitorios) - extract(month from vencimiento);
+    av = extract(year from :fecha_punitorios) - extract(year from vencimiento);
+
+    if (mv < 0) then --si es menor es porque
+    begin
+      mv = 12 + mv;
+      av = av - 1;
+    end
+
+    mv = mv + av * 12;
+
+    coeficiente = interes * mv;
+
+    if (interes_especial = 'S') then
+    begin
+      coeficiente_acum = coeficiente_acum + coeficiente;
+      tipo_interes = 3;
+    end
+  end
+
+  --tipo_interes = 4 MENSUAL Si se paso 1 día o mas del vencimiento se cobra un mes completo
+  if (tipo_interes = 4) then
+  begin
+    dv = extract(day from :fecha_punitorios) - extract(day from vencimiento);
+    mv = extract(month from :fecha_punitorios) - extract(month from vencimiento);
+    av = extract(year from :fecha_punitorios) - extract(year from vencimiento);
+
+    if (mv < 0) then
+    begin
+      mv = 12 + mv;
+      av = av - 1;
+    end
+
+    if (dv > 0) then
+      mv = mv + 1;
+
+    mv = mv + av * 12;
+
+    coeficiente = interes * mv;
+
+    if (interes_especial = 'S') then
+    begin
+      coeficiente_acum = coeficiente_acum + coeficiente;
+      tipo_interes = 3;
+    end
+  end
+
+  --tipo_interes = 2 DIARIO
+  if (tipo_interes = 2) then
+  begin
+    dv = :fecha_punitorios - vencimiento;
+    interes = interes / 30;--paso el interes a diario
+    coeficiente = dv * interes;
+
+    if (interes_especial = 'S') then
+    begin
+      if (coeficiente < 0) then
+      begin
+        coeficiente = 0;
+        coeficiente_acum = 0;
+      end
+    
+      coeficiente_acum = coeficiente_acum + coeficiente;
+      tipo_interes = 3;
+    end
+  end
+
+  /* Por si calcula los intereses en negativo que se da cuando la fecha punitorios es menor a vencimiento */
+  if (coeficiente < 0) then
+    coeficiente = 0;
+
+  --si el tipo es por rango de fechas
+  if (tipo_interes = 3) then
+  begin
+    intereses = importe * coeficiente_acum;
+    coef = coeficiente_acum;
+  end
+  else --en cualquier otro caso
+  begin
+    intereses = importe * coeficiente;
+    coef = coeficiente;
+  end
+
+  suspend;
+end

@@ -1,0 +1,106 @@
+
+{% extends "index.html" %}
+
+{% block menuizq %}
+
+
+{% if padron %}
+    <br>
+    <ul class="list-group">
+    <a  class="list-group-item active"><b>Buscar Cuotas por Padrón/Año</b></a>
+
+    <li class="list-group-item">
+         <div class="btn-group">
+                <button id="idp" value="{{ padron.id_padron }}" type="button" class="btn btn-principal btn-primary dropdown-toggle btn-xs" data-toggle="dropdown">
+                    {{ padron.padron }} ({{ padron.tributo__abreviatura }}) <b class="caret"></b>
+                </button>
+              <ul id="menuidp" class="dropdown-menu filtros" role="menu">
+                {% for idp in padr %}
+                    <li><a val="{{ idp.id_padron }}">{{ idp.padron }} ({{ idp.tributo__abreviatura }})</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+     
+        <div class="btn-group pull-right">
+                 <button id="anio" value="0" type="button" class="btn btn-principal btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" title="Filtrar por Padrón">
+                   {% if not anio %}
+                     Todos
+                    {% else %}
+                    {{anio}}
+                    {% endif %}
+                    <b class="caret"></b>
+                </button>
+              <ul id="menuanio" class="dropdown-menu filtros" role="menu" title="Filtrar por Año">
+                <li><a val="2020">2020</a></li>
+                <li><a val="2019">2019</a></li>
+                <li><a val="2018">2018</a></li>
+                <li><a val="2017">2017</a></li>
+                <li><a val="2016">2016</a></li>
+                <li><a val="2015">2015</a></li>
+                <li><a val="2014">2014</a></li>
+                <li><a val="2013">2013</a></li>
+                <li><a val="2012">2012</a></li>
+                <li><a val="2011">2011</a></li>
+                <li><a val="2010">2010</a></li>
+                <li><a val="0">Todos</a></li>
+              </ul>
+            </div>
+    </li>
+    {% endif %}
+</ul>
+
+{% endblock menuizq %}
+
+
+{% block main %}
+<div class="col-xs-12 ">
+
+    <div class="list-group2">
+        <a href="#" class="list-group-item active">
+            <b>Listado Completo de Padrones de {{user.first_name}}</b>          
+        </a>
+
+        </div>
+    <div class="datagrid" style="overflow: auto; width : 100%; height : 550px;">
+    <table>
+    <thead>
+    	<tr class="info">
+    		<!-- <th>Id</th> -->
+    		<th>Nº Padrón/Partida</th>
+		    <th>Tributo</th>
+    		<th>Total Cuotas</th>
+            <th>Ver Cuotas</th>           
+    	</tr>
+    </thead>
+    <tbody>
+    	{% for item in padr %}
+    	<tr>
+    	<!-- <td>{{ item.id_padron }}</td> -->
+        <td><span class="label label-primary">{{ item.padron }}</span></td>
+        <td>
+            {% if item.tributo == 5 %}
+                    {{ item.tributo__descripcion }} (Nº:{{item.id_padron}})
+            {% else %}
+                {{ item.tributo__descripcion }}
+            {% endif %}        
+        </td>
+        <td>{{ item.id_padron__count }} cuotas.</td>
+        <td><a  href="{% url 'ver_cuotas' item.id_padron %}" title="Ver Cuotas del Padrón {{item.padron}}"><span class="glyphicon glyphicon-search iconosTabla"></span> </a>
+        {% if item.tributo == 6 %}
+           {#  <a  href="{% url 'drei_ddjja_list' item.id_padron %}" title="DDJJ Anual del Padrón {{item.padron}}"><span class="glyphicon glyphicon-list-alt iconosTabla"></span> </a> #}
+         {% endif %}   
+    	</td>
+        </tr>        
+      	{% endfor %}      	
+    </tbody>
+    </table>
+    </div>
+                <div class="listado-pie">
+                  <b>{{padr.count}}</b> padrones encontrados.
+                </div>
+</div>
+{% endblock main %}
+
+
+
+

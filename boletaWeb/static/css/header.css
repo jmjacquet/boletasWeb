@@ -1,0 +1,20 @@
+
+
+
+header img{position:absolute;margin-top:-5px;margin-left:1rem}
+header .navbar-brand{padding:10px}
+header .logo{font-family:'Bebas' !important;font-size:3rem;display:inline-block;margin-left:4rem}
+header .logo2{font-family: 'Carme',sans-serif;;font-size:1.3rem;display:inline-block;line-height:1em;margin-left:25rem;margin-right:3rem;margin-top: 1em;color:#fff;}
+header .navbar-nav>li>a{font-size:1.3rem;line-height:1em}
+header input{width:50px}
+.navbar{margin-bottom:0px}
+.logoGG{height:45px;width:190px}
+
+
+.navbar-inverse{
+	background:rgb(0,0,0);
+    background:rgba(0,0,0,0);
+    *background:transparent;
+    *filter:progid:DXImageTransform.Microsoft.gradient(startColorStr=#6F000000,endColorStr=#6F000000);
+    *-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#6F000000,endColorstr=#6F000000)";
+    }

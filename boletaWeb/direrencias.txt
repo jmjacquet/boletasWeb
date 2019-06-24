@@ -1,0 +1,109 @@
+BEGIN;
+-- Model missing for table: sinc
+-- Model missing for table: sinc_pers
+-- Model missing for table: stickymessages_message
+-- Model missing for table: tributo_interes
+-- Application: tadese
+-- Model: Tributo
+DROP INDEX `tributo_id_tributo`;
+ALTER TABLE `tributo`
+	ADD UNIQUE (`id_tributo`);
+ALTER TABLE `tributo`
+	MODIFY `descripcion` SET NOT NULL;
+ALTER TABLE `tributo`
+	MODIFY `abreviatura` SET NOT NULL;
+ALTER TABLE `tributo`
+	MODIFY `CAJAIMPORTE` SET NOT NULL;
+ALTER TABLE `tributo`
+	MODIFY `REPORTE` SET NOT NULL;
+ALTER TABLE `tributo`
+	MODIFY `FORMATO` SET NOT NULL;
+-- Model: Responsables
+ALTER TABLE `responsables`
+	MODIFY `sexo` SET NOT NULL;
+ALTER TABLE `responsables`
+	MODIFY `calle` SET NOT NULL;
+ALTER TABLE `responsables`
+	MODIFY `piso` SET NOT NULL;
+ALTER TABLE `responsables`
+	MODIFY `depto` SET NOT NULL;
+ALTER TABLE `responsables`
+	MODIFY `localidad` SET NOT NULL;
+-- Model: Sinc
+CREATE INDEX `sinc_fecha`
+	ON `sinc` (`fecha`);
+ALTER TABLE `sinc`
+	MODIFY `id` integer;
+-- Model: SincPers
+ALTER TABLE `sinc_pers`
+	MODIFY `id` integer;
+-- Model: Cuotas
+ALTER TABLE `cuotas`
+	ADD COLUMN `segundo_vencimiento` date;
+ALTER TABLE `cuotas`
+	ADD UNIQUE (`id_cuota`);
+ALTER TABLE `cuotas`
+	MODIFY `id_padron` varchar(20);
+-- Model: DriEstudio
+ALTER TABLE `dri_estudio`
+	MODIFY `usuario` SET NOT NULL;
+ALTER TABLE `dri_estudio`
+	MODIFY `clave` SET NOT NULL;
+ALTER TABLE `dri_estudio`
+	MODIFY `email` SET NOT NULL;
+-- Model: DriEstudioPadron
+CREATE INDEX `dri_estudio_padron_id_estudioc`
+	ON `dri_estudio_padron` (`id_estudioc`);
+ALTER TABLE `dri_estudio_padron`
+	MODIFY `id_estudioc` SET NOT NULL;
+-- Model: DriActividades
+ALTER TABLE `dri_actividades`
+	ADD UNIQUE (`id_actividad`);
+ALTER TABLE `dri_actividades`
+	MODIFY `minimo` numeric(18, 2);
+ALTER TABLE `dri_actividades`
+	MODIFY `denominacion` SET NOT NULL;
+ALTER TABLE `dri_actividades`
+	MODIFY `codigo` SET NOT NULL;
+ALTER TABLE `dri_actividades`
+	MODIFY `id_rubro` SET NOT NULL;
+ALTER TABLE `dri_actividades`
+	MODIFY `id_subrubro` SET NOT NULL;
+-- Model: DriPadronActividades
+ALTER TABLE `dri_padron_actividades`
+	ADD UNIQUE (`id_padron`);
+ALTER TABLE `dri_padron_actividades`
+	ADD UNIQUE (`id_actividad`);
+CREATE INDEX `dri_padron_actividades_id_actividad`
+	ON `dri_padron_actividades` (`id_actividad`);
+ALTER TABLE `dri_padron_actividades`
+	MODIFY `principal` SET NOT NULL;
+ALTER TABLE `dri_padron_actividades`
+	MODIFY `expediente` SET NOT NULL;
+-- Model: DriBoleta
+CREATE INDEX `dri_boleta_id_cuota`
+	ON `dri_boleta` (`id_cuota`);
+ALTER TABLE `dri_boleta`
+	MODIFY `fechapago` DROP NOT NULL;
+-- Model: DriBoleta_actividades
+CREATE INDEX `dri_boleta_actividades_id_actividad`
+	ON `dri_boleta_actividades` (`id_actividad`);
+ALTER TABLE `dri_boleta_actividades`
+	MODIFY `alicuota` DROP NOT NULL;
+ALTER TABLE `dri_boleta_actividades`
+	MODIFY `minimo` DROP NOT NULL;
+ALTER TABLE `dri_boleta_actividades`
+	MODIFY `impuesto` DROP NOT NULL;
+ALTER TABLE `dri_boleta_actividades`
+	MODIFY `activ_descr` DROP NOT NULL;
+-- Model: DriDDJJA_actividades
+CREATE INDEX `dri_ddjj_actividades_id_ddjj`
+	ON `dri_ddjj_actividades` (`id_ddjj`);
+CREATE INDEX `dri_ddjj_actividades_id_actividad`
+	ON `dri_ddjj_actividades` (`id_actividad`);
+-- Model: Configuracion
+ALTER TABLE `configuracion`
+	MODIFY `varios1` varchar(100);
+ALTER TABLE `configuracion`
+	MODIFY `detalleContrib` varchar(200);
+COMMIT;

@@ -1,0 +1,7 @@
+Liquidacion DReI
+****************
+Con una cuota seleccionada saco el id_Padron.
+con el ID_Padron y ((fecha_fin is null)or(fecha_fin >= current_date))
+saco las actividades relacionadas de DriPadronActividades y sus caracteristicas de DriActividades (join).
+Si rectifica traer precargados los edits de minimo.
+

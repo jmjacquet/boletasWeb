@@ -1,0 +1,43 @@
+body {
+	font-family: sans-serif;
+}
+
+.estudio_contribuyente {
+	background-color: #f0f0f0;
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	padding: 3px;
+}
+
+.encabezado_listado {
+	background-color: steelblue;
+	color: white;
+	font-family: Arial, Helvetica, sans-serif;
+	padding: 3px;
+}
+
+.drei_panel {
+	background-color: #f2f2f2;
+	border-style: solid;
+	border-width: 1pt;
+	font-family: Arial, sans-serif;
+	padding: 3px;
+}
+
+
+.busqueda {
+	background-color: steelblue;
+	border-color: black;
+	border-width: thin;
+	color: white;
+	font-family: sans-serif;
+	padding: 2px;
+}
+
+.grilla_renglon {
+	background-color: #ebebeb;
+	color: black;
+	font-family: Arial;
+	font-style: normal;
+	font-weight: 500;
+}	
