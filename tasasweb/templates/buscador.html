@@ -1,0 +1,32 @@
+{% if padron %}
+<br>
+<ul class="list-group">
+    <a  class="list-group-item active"><b>Buscar Cuotas por Padrón/Año</b></a>
+
+    <li class="list-group-item">
+         <div class="btn-group">
+                <button id="idp" value="{{ padron.id_padron }}" type="button" class="btn btn-principal btn-primary dropdown-toggle btn-xs" data-toggle="dropdown">
+                    {{ padron.padron }} ({{ padron.tributo__abreviatura }}) <b class="caret"></b>
+                </button>
+              <ul id="menuidp" class="dropdown-menu filtros" role="menu">
+                {% for idp in padr %}
+                    <li><a val="{{ idp.id_padron }}">{{ idp.padron }} ({{ idp.tributo__abreviatura }})</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+     
+        <div class="btn-group pull-right">
+                 <button id="anio" value="0" type="button" class="btn btn-principal btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" title="Filtrar por Padrón">
+                   {% if not anio %}
+                     Todos
+                    {% else %}
+                    {{anio}}
+                    {% endif %}
+                    <b class="caret"></b>
+                </button>
+              {% include "anios.html" %}
+            </div>
+    </li>
+    
+</ul>
+{% endif %}

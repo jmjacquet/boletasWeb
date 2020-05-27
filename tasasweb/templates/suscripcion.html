@@ -1,0 +1,24 @@
+<br>
+<ul class="list-group">
+    <a  class="list-group-item active"><b>Suscripción Boleta Digital</b>
+        {% if suscripcion_msj %}
+            <i class="glyphicon glyphicon-question-sign pull-right" title="{{suscripcion_msj}}"></i>
+        {% endif %}
+    </a>
+    {% if suscriptor %}
+        {% if suscriptor.activa %}
+            <li class="list-group-item center-block">Fecha Alta <span class="badge badge-info">{{suscriptor.fecha_alta|date:"d/m/Y"}}</span></li>
+            <li class="list-group-item text-center">
+                <button id="desuscribir" type="button" class="btn btn-danger btn-xs"><i class="fa fa-thumbs-down"></i> Desuscribirme</button>
+            </li>
+        {% else %}
+            <li class="list-group-item text-center">
+                <button id="suscribir" type="button" class="btn btn-primary btn-xs"><i class="fa fa-thumbs-up"></i> Suscribirme</button>
+            </li>
+        {% endif %}
+    {% else %}
+        <li class="list-group-item text-center">
+            <button id="suscribir" type="button" class="btn btn-primary btn-xs"><i class="fa fa-thumbs-up"></i> Suscribirme</button>
+        </li>
+    {% endif %}
+</ul>

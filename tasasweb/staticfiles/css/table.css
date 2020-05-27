@@ -1,0 +1,158 @@
+.datagrid,.formulario table tbody td
+{ 
+font-size: 10px;
+
+}
+.datagrid table
+{
+border-collapse: collapse;
+text-align: center;
+width: 100%;
+}
+.iconosTabla{
+ font-size: 15px;
+ cursor:pointer;
+}
+
+.pagada{
+  background-color:#D2D2D2;
+ }
+
+.selected{
+  background-color:#8EE8C7;
+ 
+}
+.pagada .iconosTabla{
+ font-size: 15px;
+  color:#000000;
+}
+
+table.tablaPadrones {
+  width: 100%;
+  text-align: left;
+ 
+  border: 1px solid #000000;
+}
+table.tablaPadrones td, table.tablaPadrones th {
+  padding: 1px 1px;
+}
+table.tablaPadrones tbody td {
+  font-size: 11px;
+  color: #333333;
+}
+table.tablaPadrones thead {
+  background: #668394;
+}
+table.tablaPadrones thead th {
+  font-size: 11px;
+  font-weight: normal;
+  color: #FFFFFF;
+  
+}
+
+
+table.tablaActividades {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+   border: 1px solid #000000;
+}
+table.tablaActividades td, table.tablaActividades th {
+  padding: 1px 1px;
+}
+table.tablaActividades tbody td {
+  font-size: 11px;
+  color: #333333;
+}
+table.tablaActividades thead {
+  background: #6C84A3;
+}
+table.tablaActividades thead th {
+  font-size: 11px;
+  font-weight: normal;
+  color: #FFFFFF;
+}
+
+
+.datagrid {
+	font: normal 11px Arial, Helvetica, sans-serif;
+  
+	background: #fff;
+	text-align: center;
+	box-shadow: 0 0 5px #000;
+
+	}
+
+
+.datagrid form {
+  padding: 5px;
+  font: normal 12px Arial, Helvetica, sans-serif;
+  padding: 5px;
+  background: #fff;
+  overflow: hidden;
+  text-align: left;
+  }
+
+.datagrid table td, .datagrid table th
+{ padding: 5px 7px;
+}
+.datagrid table thead th {
+	background-color:#428bca;
+	color:#FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	text-align: center;	
+  border:none;
+	}
+
+
+.datagrid table tbody td
+{ color: black;
+/*border-left: 1px solid #E1EEF4;*/
+font-size: 11px;
+
+
+}
+
+
+.datagrid table tbody .pagada td
+{ color:#000000;
+/*border-left: 1px solid #E1EEF4;*/
+/*font-size: 11px;*/
+/*font-weight: bold;*/
+}
+
+
+
+.datagrid table tbody tr:last-child td { border-bottom: none; }
+.datagrid table tfoot td div { border-top: 1px solid #006699;}
+.datagrid table tfoot td { padding: 5px; background-color:#428bca;
+	color:#FFFFFF;font-weight: bold; }
+.datagrid table tfoot td div{ padding: 2px; }
+.datagrid table tfoot td ul { margin: 0; padding:0; list-style: none; text-align: right; }
+.datagrid table tfoot  li { display: inline; }
+.datagrid table tfoot li a { text-decoration: none; display: inline-block;  padding: 2px 8px; margin: 1px;color: #FFFFFF;border: 1px solid #006699;-webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');background-color:#006699; }
+.datagrid table tfoot ul.active,
+.datagrid table tfoot ul a:hover { text-decoration: none;border-color: #00557F; color: #FFFFFF; background: none; background-color:#006699;}
+
+
+.label {
+    display: inline;
+    padding: .3em .6em .3em;
+    font-size: 95%;
+    font-weight: bold;
+    line-height: 1;
+    color: #ffffff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+
+
+
+ .form-adicionales .form-group{
+  margin-bottom: 5px;
+ }
+

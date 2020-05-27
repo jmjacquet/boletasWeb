@@ -1,0 +1,100 @@
+{% load static from staticfiles %}
+{% load humanize %}
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="es">
+<head>
+<link rel="stylesheet" href="{% static 'css/boletas.css' %}" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>LISTADO BOLETAS DReI ON-Line</title>
+<style type="text/css">
+        @page {
+            size: A4 landscape;
+            margin: 0.1in 0.1in 0.1in 0.1in;
+           padding: 0;
+         }
+</style>
+</head>
+<body>
+<table width="100%" cellspacing="0" valign="middle" align="center">
+  <tr>
+      <td valign="middle" >
+          <h1 align="center"><strong>LISTADO BOLETAS DReI ON-Line</strong></h1>        
+          <div align="center"></div>
+      </td>     
+  </tr>   
+  <tr>
+    <td valign="middle" align="center" >
+ 	{% regroup boleta_detalles by id_boleta as lista_boletas %}
+	{% for boleta in lista_boletas %}       
+	<table class="table table-condensed tablaPadrones" width="100%" cellspacing="0" valign="middle" align="center">
+	    <thead>
+	        <tr>
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos" >Padrón</th>
+	            <th class="titulos" bgcolor="#CCCCCC" style="border-bottom:1px;">Año</th>
+	            <th class="titulos" bgcolor="#CCCCCC" style="border-bottom:1px;">Mes</th>
+	            <th class="titulos" width="10%;">Contribuyente</th>
+	            <th class="titulos" vbgcolor="#CCCCCC" style="border-bottom:1px;">F.Carga</th>
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos">Der.Neto</th>
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos">TasaS.Públ.</th>
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos">Adicional</th>
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos">MontoAdic.</th>
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos">Retenciones</th>
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos">Mín.Global</th>
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos">Recargos</th>          
+	            <th bgcolor="#CCCCCC" style="border-bottom:1px;" class="titulos">Total</th>            
+	            <th></th>
+	        </tr>
+	    </thead>
+	    <tbody>                                  
+	                                               
+	                <tr>
+	                    <td class="datos">{{ boleta.list.0.id_boleta__id_cuota__padron }}</td>
+	                    <td class="datos">{{ boleta.list.0.id_boleta__anio }}</td>
+	                    <td class="datos">{{ boleta.list.0.id_boleta__mes }}</td>
+	                    <td class="datos">{{ boleta.list.0.id_boleta__id_cuota__id_responsable__nombre }}</td>
+	                    <td class="datos">{{ boleta.list.0.id_boleta__fechapago|date:"d/m/Y" }}</td>
+	                    <td class="datos">${{ boleta.list.0.id_boleta__derecho_neto|default_if_none:'0' }}</td>
+	                    <td class="datos">${{ boleta.list.0.id_boleta__tasa_salud_publ|default_if_none:'0' }}</td>
+	                    <td class="datos">{{ boleta.list.0.id_boleta__adic_detalle|default_if_none:'' }}</td>
+	                    <td class="datos">${{ boleta.list.0.id_boleta__adic_monto|default_if_none:'0' }}</td>
+	                    <td class="datos">${{ boleta.list.0.id_boleta__retenciones|default_if_none:'0' }}</td>
+	                    <td class="datos">${{ boleta.list.0.id_boleta__minimo_global|default_if_none:'0' }}</td>
+	                    <td class="datos">${{ boleta.list.0.id_boleta__recargo|default_if_none:'0' }}</td>
+	                    <td class="datos"><strong>$ {{ boleta.list.0.id_boleta__total|default_if_none:'0' }}</strong></td>                                                
+	                </tr>
+	                <tr>
+	                    <td colspan="3"></td>
+	                    <td colspan="10">
+	                        <table class="table table-condensed tablaActividades" width="100%" cellspacing="0" valign="middle" align="center">
+	                        <thead>
+	                            <tr>
+	                                <th class="titulos">Actividad</th>
+	                                <th bgcolor="#CCCCCC" style="border-bottom:1px;width:10%;" class="titulos">Base</th>
+	                                <th bgcolor="#CCCCCC" style="border-bottom:1px;width:10%;" class="titulos">Alícuota<small>{{sitio.alicuota_unidad}}</small></th>
+	                                <th bgcolor="#CCCCCC" style="border-bottom:1px;width:10%;" class="titulos">Impuesto</th>                                                                        
+	                            </tr>
+	                        </thead>
+	                        <tbody>                                                        
+	                        {% for item in boleta.list %}
+	                        <tr>
+	                            <td class="datos">{{ item.activ_descr|default_if_none:'' }}</td>
+	                            <td class="datos">${{ item.base|default_if_none:'0' }}</td>
+	                            <td class="datos">{{ item.alicuota|default_if_none:'0' }}</td>                                                       
+	                            <td class="datos">${{ item.impuesto|default_if_none:'0' }}</td>
+
+	                        </tr>
+	                        {% endfor %}
+	                        </tbody>
+	                    </table>
+	                    </td>
+	                </tr>
+	             
+	    </tbody>
+	</table> 
+	{% endfor %}
+</td>
+</tr>
+
+</table>
+
+</body>
+</html>

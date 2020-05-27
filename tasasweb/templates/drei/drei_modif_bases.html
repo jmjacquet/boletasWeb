@@ -1,0 +1,90 @@
+{% extends "cuotas.html" %}
+{% load static from staticfiles %}
+{% load filtros %}
+{% load i18n l10n  %}
+{% load bootstrap3 %}
+{% load humanize %}
+{% block exxtra_js %}
+{% endblock %}
+{% block main %}
+
+<form action="." method="post" id="formularioDREI" >
+            
+            {% csrf_token %}
+           
+            {{ form.id_padron}}
+            {{ form.anio }}
+            {{ form.mes}}
+            {{ form.vencimiento}}
+            {{ form.total}}
+            {{ form.minimo_global}}
+            {{ form.adic_detalle}}
+            {{ form.errors }}
+  
+    <div class="formulario datagrid col-xs-12 mas-izq mas-der">
+        
+    <div class="barra_titulo">
+        <b>{{titulo}}</b>        
+        <b class="pull-left">Padrón: {{cuota.padron}}</b>
+        <b class="pull-right">Vencimiento: {{cuota.vencimiento|date:"d/m/Y"}}</b>
+        <b style="margin-right:20px;" class="pull-right">Período: {{cuota.cuota|safe}} / {{cuota.anio|safe}}</b>
+    </div>     
+       
+    <table>      
+      
+      {# Campos para almacenar y pasar valores a los JS, no se llenan #}
+      <input type='hidden' name="id_cuota" value="{{ cuota.id_cuota }}" />
+     
+        {{ actividades_formset.management_form }}
+        {{ actividades_formset.non_field_errors }}  
+        {% for forma in actividades_formset.forms %}
+          {% if forloop.first %}
+              <thead>
+                  <th style="width:70%;">Detalle Actividad</th>
+                  <th>Base Imponible</th>                                    
+              </thead>
+              <tfoot align='right'>
+                  <tr><td colspan="2"></td></tr>
+              </tfoot>       
+              <tbody class="form-actividades" >
+          {% endif %}
+          {% for hidden in forma.hidden_fields %}
+                          {{ hidden }}
+                          {% endfor %}
+          <tr>                
+              <td align="left"> 
+                  <small>
+                    <div class="input-group-descr">                       
+                        {{forma.activ_descr|addcss:"descr_activ"}} 
+                    </div>
+                  </small>
+              </td>
+              <td>                     
+                      <div class="input-group2">
+                        <span class="input-group-addon">$</span>
+                        {{forma.base|default_if_none:"0" |addcss:"form-control "}} 
+                      </div>
+                      
+                      {{ forma.base.errors.as_ul }}
+              </td>                          
+          </tr>
+          {% if forloop.last %}             
+              </tbody>            
+          {% endif %}
+      {% endfor %}
+
+    </table> 
+    </div> 
+    <div class="row separacion">
+      <div class="col-xs-12">
+      <input class="btn btn-primary btn-md pull-right" role="button" type="submit" value="Guardar">
+      <a href="{% url 'ver_cuotas' idp=cuota.id_padron  %}"  class="btn btn-md btn-default pull-left">Cancelar y Volver</a>   
+      </div>
+    </div>
+
+</form>
+        
+
+
+{% endblock main %}
+

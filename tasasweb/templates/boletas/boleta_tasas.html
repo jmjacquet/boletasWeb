@@ -1,0 +1,313 @@
+{% load static from staticfiles %}
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="es">
+<head>
+<link rel="stylesheet" href="{% static 'css/boletas.css' %}" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{{titulo}}</title>
+<style type="text/css">
+  @page {
+    margin: 0.5cm;
+    padding: 0;
+  }
+</style>
+</head>
+<body>
+<table width="100%" height="971" border="0" cellspacing="0">
+  <tr>
+    <td width="20%" height="93" align="center">
+      <img src="{% static 'munis/' %}{{dirMuni}}/logo_boleta.png" alt="InfoMunicipio" width="62" height="62" /></td>
+    <td width="65%" align="center" > 
+      <p><span class="comuna_nombre">{{sitio.nombre}}</span><br /> <span class="comuna_datos">{{sitio.direccion}}<br /> {{sitio.varios1}}</span></p>
+    </td>
+    <td width="15%" align="right"  class="destino_cuerpo">
+      <table  border="0" cellspacing="0">
+         <tr>
+          <td align="center" class="datos  tabla_izq tabla_arriba tabla_der">{{sitio.ncuerpo1|default_if_none:''}}</td>
+        </tr>
+        <tr>
+          <td align="center" class="titulos tabla_izq tabla_der ">Fecha Impresión</td>
+        </tr>
+        <tr>
+          <td class="datos tabla_izq tabla_der " align="center">{{fecha|date:"d/m/Y"}}</td>
+        </tr>
+        <tr>
+          <td align="center" class="titulos tabla_izq tabla_der ">Nro. Cuota</td>
+        </tr>
+        <tr>
+          <td class="datos tabla_izq tabla_der tabla_abajo " align="center">{{cuota.id_cuota|safe}}</td>
+        </tr>
+      </table>
+    </td>
+    
+  </tr>
+ <tr valign="middle" >
+     <td  colspan="3" valign="middle" class="tituloBoleta"> Boleta {{cuota.tributo}}  </td>   
+  </tr>
+  <tr>
+    <td colspan="3" align="left" valign="middle">
+      <table border="0" cellspacing="0" valign="middle">
+      <tr>
+        <td width="20%" class="titulos">Padrón/Cuenta</td>
+        <td colspan="2" class="titulos">Razón Social</td>
+        <td width="20%" class="titulos">Documento</td>
+        <td width="20%" class="titulos">Tributo</td>
+      </tr>
+      <tr>
+        <td width="20%" class="datos">{{cuota.padron}}</td>
+        <td colspan="2" class="datos">{{cuota.nombre_boleta}}</td>
+        <td width="20%" class="datos">{{cuota.nrodocu|default_if_none:''}}</td>
+        <td width="20%" class="datos">{{cuota.tributo.abreviatura|default_if_none:''}}</td>        
+      </tr> 
+      <tr>
+        <td width="20%" class="titulos">Año</td>
+        <td width="20%" class="titulos">Período</td>
+        <td width="20%" class="titulos">Vencimiento</td>
+        <td width="22%" class="titulos">Importe Orig.</td>
+        <td width="20%" class="titulos">{% if codseg %}Código Seguridad {% endif %}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="datos">{{cuota.anio|safe}}</td>
+        <td width="20%" class="datos">{{cuota.cuota}}</td>
+        <td width="20%" class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+        <td width="20%" class="importe">$ {{cuota.saldo}}</td>
+        <td width="20%" class="datos">{{codseg|default_if_none:''}}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="titulos"></td>
+        <td width="20%" class="titulos">Fecha</td>
+        <td width="20%" class="titulos">Punitorios</td>
+        <td width="20%" class="titulos">Importe</td>
+        <td width="20%" class="titulos">{% if codLINK %}Pago Electrónico {% endif %}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="titulo_vencimiento">1er. Vencimiento</td>
+        <td width="20%" class="datos">{{vencimiento|date:"d/m/Y"}}</td>
+        <td width="20%" class="datos">$ {{porc1}}</td>
+        <td width="20%" class="importe">$ {{punit1}}</td>        
+        <td width="20%" class="datos">{{codLINK|default_if_none:''}}</td>
+        </tr>
+      <tr>
+        <td width="20%" class="titulo_vencimiento">2do. Vencimiento</td>
+        <td width="20%" class="datos">{{vencimiento2|date:"d/m/Y"}}</td>
+        <td width="20%" class="datos">$ {{porc2}}</td>
+        <td width="20%" class="importe">$ {{punit2}}</td>
+        <td width="20%" class="importe"></td>
+        </tr>      
+     </table>
+  <tr>
+    <td height="20" colspan="3" align="center"  >
+      <br>
+      <img src="data:image/png;base64,{{codbar}}" class="CB" >      
+    </td>
+  </tr>
+  <tr>
+    <td height="30" colspan="3" align="center" valign="middle">{{codigo}}
+      <hr> 
+      <br>     
+    </td>
+  </tr>     
+   
+  <tr>
+    <td width="20%" height="93" align="center">
+      <img src="{% static 'munis/' %}{{dirMuni}}/logo_boleta.png" alt="InfoMunicipio" width="62" height="62" /></td>
+    <td width="65%" align="center" > 
+      <p><span class="comuna_nombre">{{sitio.nombre}}</span><br /> <span class="comuna_datos">{{sitio.direccion}}<br /> {{sitio.varios1}}</span></p>
+    </td>
+    <td width="15%" align="right"  class="destino_cuerpo">
+      <table  border="0" cellspacing="0">
+         <tr>
+          <td align="center" class="datos  tabla_izq tabla_arriba tabla_der">{{sitio.ncuerpo2|default_if_none:''}}</td>
+        </tr>
+        <tr>
+          <td align="center" class="titulos tabla_izq tabla_der ">Fecha Impresión</td>
+        </tr>
+        <tr>
+          <td class="datos tabla_izq tabla_der " align="center">{{fecha|date:"d/m/Y"}}</td>
+        </tr>
+        <tr>
+          <td align="center" class="titulos tabla_izq tabla_der ">Nro. Cuota</td>
+        </tr>
+        <tr>
+          <td class="datos tabla_izq tabla_der tabla_abajo " align="center">{{cuota.id_cuota|safe}}</td>
+        </tr>
+      </table>
+    </td>
+    
+  </tr>
+ <tr valign="middle" >
+     <td  colspan="3" valign="middle" class="tituloBoleta"> Boleta {{cuota.tributo}}  </td>   
+  </tr>
+  <tr>
+    <td colspan="3" align="left" valign="middle">
+      <table border="0" cellspacing="0" valign="middle">
+      <tr>
+        <td width="20%" class="titulos">Padrón/Cuenta</td>
+        <td colspan="2" class="titulos">Razón Social</td>
+        <td width="20%" class="titulos">Documento</td>
+        <td width="20%" class="titulos">Tributo</td>
+      </tr>
+      <tr>
+        <td width="20%" class="datos">{{cuota.padron}}</td>
+        <td colspan="2" class="datos">{{cuota.nombre_boleta}}</td>
+        <td width="20%" class="datos">{{cuota.nrodocu|default_if_none:''}}</td>
+        <td width="20%" class="datos">{{cuota.tributo.abreviatura|default_if_none:''}}</td>        
+      </tr> 
+      <tr>
+        <td width="20%" class="titulos">Año</td>
+        <td width="20%" class="titulos">Período</td>
+        <td width="20%" class="titulos">Vencimiento</td>
+        <td width="22%" class="titulos">Importe Orig.</td>
+        <td width="20%" class="titulos">{% if codseg %}Código Seguridad {% endif %}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="datos">{{cuota.anio|safe}}</td>
+        <td width="20%" class="datos">{{cuota.cuota}}</td>
+        <td width="20%" class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+        <td width="20%" class="importe">$ {{cuota.saldo}}</td>
+        <td width="20%" class="datos">{{codseg|default_if_none:''}}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="titulos"></td>
+        <td width="20%" class="titulos">Fecha</td>
+        <td width="20%" class="titulos">Punitorios</td>
+        <td width="20%" class="titulos">Importe</td>
+        <td width="20%" class="titulos">{% if codLINK %}Pago Electrónico {% endif %}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="titulo_vencimiento">1er. Vencimiento</td>
+        <td width="20%" class="datos">{{vencimiento|date:"d/m/Y"}}</td>
+        <td width="20%" class="datos">$ {{porc1}}</td>
+        <td width="20%" class="importe">$ {{punit1}}</td>        
+        <td width="20%" class="datos">{{codLINK|default_if_none:''}}</td>
+        </tr>
+      <tr>
+        <td width="20%" class="titulo_vencimiento">2do. Vencimiento</td>
+        <td width="20%" class="datos">{{vencimiento2|date:"d/m/Y"}}</td>
+        <td width="20%" class="datos">$ {{porc2}}</td>
+        <td width="20%" class="importe">$ {{punit2}}</td>
+        <td width="20%" class="importe"></td>
+        </tr>      
+     </table>
+  <br>
+  <tr>
+    <td height="20" colspan="3" align="center"  >
+      <br>
+      <img src="data:image/png;base64,{{codbar}}" class="CB" >      
+    </td>
+  </tr>
+  <tr>
+    <td height="30" colspan="3" align="center" valign="middle">{{codigo}}
+      <hr> 
+      <br>     
+    </td>
+  </tr>   
+     
+   <tr>
+    <td width="20%" height="93" align="center">
+      <img src="{% static 'munis/' %}{{dirMuni}}/logo_boleta.png" alt="InfoMunicipio" width="62" height="62" /></td>
+    <td width="65%" align="center" > 
+      <p><span class="comuna_nombre">{{sitio.nombre}}</span><br /> <span class="comuna_datos">{{sitio.direccion}}<br /> {{sitio.varios1}}</span></p>
+    </td>
+    <td width="15%" align="right"  class="destino_cuerpo">
+      <table  border="0" cellspacing="0">
+         <tr>
+          <td align="center" class="datos  tabla_izq tabla_arriba tabla_der">{{sitio.ncuerpo3|default_if_none:''}}</td>
+        </tr>
+        <tr>
+          <td align="center" class="titulos tabla_izq tabla_der ">Fecha Impresión</td>
+        </tr>
+        <tr>
+          <td class="datos tabla_izq tabla_der " align="center">{{fecha|date:"d/m/Y"}}</td>
+        </tr>
+        <tr>
+          <td align="center" class="titulos tabla_izq tabla_der ">Nro. Cuota</td>
+        </tr>
+        <tr>
+          <td class="datos tabla_izq tabla_der tabla_abajo " align="center">{{cuota.id_cuota|safe}}</td>
+        </tr>
+      </table>
+    </td>
+    
+  </tr>
+ <tr valign="middle" >
+     <td  colspan="3" valign="middle" class="tituloBoleta"> Boleta {{cuota.tributo}}  </td>   
+  </tr>
+  <tr>
+    <td colspan="3" align="left" valign="middle">
+      <table border="0" cellspacing="0" valign="middle">
+      <tr>
+        <td width="20%" class="titulos">Padrón/Cuenta</td>
+        <td colspan="2" class="titulos">Razón Social</td>
+        <td width="20%" class="titulos">Documento</td>
+        <td width="20%" class="titulos">Tributo</td>
+      </tr>
+      <tr>
+        <td width="20%" class="datos">{{cuota.padron}}</td>
+        <td colspan="2" class="datos">{{cuota.nombre_boleta}}</td>
+        <td width="20%" class="datos">{{cuota.nrodocu|default_if_none:''}}</td>
+        <td width="20%" class="datos">{{cuota.tributo.abreviatura|default_if_none:''}}</td>        
+      </tr> 
+      <tr>
+        <td width="20%" class="titulos">Año</td>
+        <td width="20%" class="titulos">Período</td>
+        <td width="20%" class="titulos">Vencimiento</td>
+        <td width="22%" class="titulos">Importe Orig.</td>
+        <td width="20%" class="titulos">{% if codseg %}Código Seguridad {% endif %}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="datos">{{cuota.anio|safe}}</td>
+        <td width="20%" class="datos">{{cuota.cuota}}</td>
+        <td width="20%" class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+        <td width="20%" class="importe">$ {{cuota.saldo}}</td>
+        <td width="20%" class="datos">{{codseg|default_if_none:''}}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="titulos"></td>
+        <td width="20%" class="titulos">Fecha</td>
+        <td width="20%" class="titulos">Punitorios</td>
+        <td width="20%" class="titulos">Importe</td>
+        <td width="20%" class="titulos">{% if codLINK %}Pago Electrónico {% endif %}</td>
+      </tr>
+      <tr>
+        <td width="20%" class="titulo_vencimiento">1er. Vencimiento</td>
+        <td width="20%" class="datos">{{vencimiento|date:"d/m/Y"}}</td>
+        <td width="20%" class="datos">$ {{porc1}}</td>
+        <td width="20%" class="importe">$ {{punit1}}</td>        
+        <td width="20%" class="datos">{{codLINK|default_if_none:''}}</td>
+        </tr>
+      <tr>
+        <td width="20%" class="titulo_vencimiento">2do. Vencimiento</td>
+        <td width="20%" class="datos">{{vencimiento2|date:"d/m/Y"}}</td>
+        <td width="20%" class="datos">$ {{porc2}}</td>
+        <td width="20%" class="importe">$ {{punit2}}</td>
+        <td width="20%" class="importe"></td>
+        </tr>      
+     </table>
+    
+  <tr>
+    <td height="20" colspan="3" align="center"  >
+      <br>
+      <img src="data:image/png;base64,{{codbar}}" class="CB" >      
+    </td>
+  </tr>
+  <tr>
+    <td height="30" colspan="3" align="center" valign="middle">{{codigo}}
+      <hr> 
+      <br>     
+    </td>
+  </tr>   
+   {% if leyenda %}
+  <tr>
+    <td height="30" colspan="3" align="center" valign="middle" >     
+      <br>
+    
+      {{leyenda|default_if_none:''|upper}}           
+      </td>
+  </tr>         
+  {% endif %}        
+</table>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+    body {
+      background-image: url("../images/fondo.jpg");
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: left top;
+      background-size: cover;
+    }
+
+    /*a.list-group-item.active*/
+    
+    .form-signin input[type="text"] {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+
+    }
+    .form-signin input[type="password"] {        
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .form-signin .form-group .input-group{
+        margin:5px;
+        width:100%;
+    }
+    .form-signin.form-group .input-group-addon{     
+        /*font-size: 16px;       */
+    }
+     
+    .form-signin .form-control {
+        position: relative;
+        font-size: 14px;
+        font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+        height: 30px;
+        padding: 10px;
+
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .vertical-offset-100 {
+        padding-top: 2.5em;
+    }
+    .img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+    }
+    .panel {
+    margin-bottom: 20px;
+    background:rgb(0,0,0);
+    background:rgba(0,0,0,.3);
+    border: none;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    text-align: center;
+    }
+   
+   .login{
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -ms-border-radius: 7px;
+    -o-border-radius: 7px;
+    border-radius: 7px;
+    width: 25em;
+    margin: 0px auto 0px auto;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 0px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}

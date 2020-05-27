@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" charset="utf-8">
+        {% load static from staticfiles %}
+        <title>{% block title %}Sistema de Liquidación de Boletas OnLine{% endblock %}</title>
+        <META NAME="Description" CONTENT="{% block description %}Sistema de Boletas WEB{% endblock %}">
+        <link rel="shortcut icon" href="{% static 'images/logo.png' %}"  type="image/png">
+        
+        <link href="http://fonts.googleapis.com/css?family=Carme" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Gafata" rel="stylesheet" type="text/css">
+
+        <link rel="stylesheet" href="{% static 'css/base.css'%}?{% now "Ymd"%}" type="text/css" >
+        
+        <link rel="stylesheet" href="{% static 'css/table.css'%}?{% now "Ymd"%}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'css/modals.css'%}?{% now "Ymd"%}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'alertifyjs/css/alertify.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'alertifyjs/css/themes/bootstrap.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'bootstrap/css/jquery-ui.css' %}" type="text/css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <link href="{% static 'css/colorbox.css' %}" rel="stylesheet" type="text/css">
+
+        <link rel="stylesheet" href="{% static 'DataTables/datatables.css' %}" type="text/css" />        
+        <link rel="stylesheet" href="{% static 'DataTables/DataTables-1.10.15/css/dataTables.bootstrap.min.css' %}" type="text/css" />        
+        <link rel="stylesheet" href="{% static 'DataTables/Buttons-1.5.1/css/buttons.bootstrap.min.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'DataTables/FixedHeader-3.1.2/css/fixedHeader.bootstrap.min.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'DataTables/FixedHeader-3.1.2/css/fixedHeader.dataTables.min.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'DataTables/Buttons-1.5.1/css/buttons.dataTables.min.css' %}" type="text/css" />
+        <link rel="stylesheet" href="{% static 'DataTables/Buttons-1.5.1/css/buttons.bootstrap.min.css' %}" type="text/css" />
+    	  <link rel="stylesheet" href="{% static 'css/estilo.css'%}?{% now "Ymd"%}" type="text/css" />
+        {% block extra_css %}
+    	{% endblock %}
+
+        <script src="{% static 'bootstrap/js/html5shiv.js' %}" type="text/javascript"></script>
+        <script src="{% static 'bootstrap/js/respond.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'bootstrap/js/jquery.js' %}" type="text/javascript" ></script>
+        <script src="{% static 'bootstrap/js/jquery-ui.js' %}" type="text/javascript" ></script>
+        <script src="{% static 'js/libs/bootstrap.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'bootstrap/js/sorttable.js' %}" type="text/javascript"></script>
+        <script src="{% static 'js/filtros.js' %}" type="text/javascript"></script>        
+        <script src="{% static 'alertifyjs/alertify.js' %}" type="text/javascript"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.colorbox-min.js' %}"></script>
+
+        {% block exxtra_js %}
+          <script src="{% static 'DataTables/moment.min.js' %}" type="text/javascript"></script>      
+          <script src="{% static 'DataTables/datatables.js' %}" type="text/javascript"></script>            
+          <script src="{% static 'DataTables/datetime-moment.js' %}" type="text/javascript"></script>                  
+          <script src="{% static 'DataTables/Responsive-2.2.1/js/dataTables.responsive.min.js' %}" type="text/javascript"></script>
+          <script src="{% static 'DataTables/Responsive-2.2.1/js/responsive.bootstrap.min.js' %}" type="text/javascript"></script>
+          <script src="{% static 'DataTables/Buttons-1.5.1/js/dataTables.buttons.min.js' %}" type="text/javascript"></script>
+          <script src="{% static 'DataTables/Buttons-1.5.1/js/buttons.colVis.min.js' %}" type="text/javascript"></script>
+          <script src="{% static 'DataTables/Buttons-1.5.1/js/buttons.bootstrap.min.js' %}" type="text/javascript"></script>
+          <script src="{% static 'DataTables/FixedHeader-3.1.3/js/dataTables.fixedHeader.min.js' %}" type="text/javascript"></script>    
+        {% endblock %}
+        {% block extra_js %}
+        {% endblock %}
+        
+<script>
+   $(document).ready(function(){
+        $("#codigoInternet").colorbox({inline:true, width:"650"});             
+        $('[data-toggle=tooltip]').tooltip();
+        $('#modal_cartel').modal('show');
+    });
+    alertify.defaults.transition = "slide";
+    alertify.defaults.theme.ok = "btn btn-primary";
+    alertify.defaults.theme.cancel = "btn btn-default";
+    alertify.defaults.theme.input = "form-control";  
+</script>
+</head>
+
+<body>
+
+    {% if user.is_authenticated %}
+      <div class="container2">    
+          <div class="row">
+            {% include "header.html" %}
+          </div>
+    {% else %} 
+    <div class="container">          
+    {% endif %}         
+      {% block principal %}          
+      {% endblock principal %}
+    </div>
+    
+</body>
+
+</html>

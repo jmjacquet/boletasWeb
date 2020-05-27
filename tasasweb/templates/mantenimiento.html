@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block principal %}	
+
+<div class="row mantenimiento">
+	      		
+	            <div class="col-sm-12 text-center ">            
+	              <div> 
+	                    <div class="modal-header text-center">
+	                     <a href="{{sitio.link_retorno}}"> <img title="Volver a la Página del Municipio" class="profile-img" src="{% static 'munis/' %}{{dirMuni}}/logo_muni.png" alt="">
+	                     </a>
+
+	                	</div>	                    
+	              </div>
+	              <h1> SITIO EN MANTENIMIENTO </h1> 
+                  <br>
+                	<h3> El sitio estará disponible a la brevedad... </h3>
+	            </div>
+	      </div>
+	
+	
+
+
+{% endblock principal %}
+
+
+		

@@ -1,0 +1,179 @@
+{% extends "cuotas.html" %}
+{% load static from staticfiles %}
+{% load i18n l10n  %}
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block extra_js %}
+ <script src="{% static 'js/scripts.js'%}?{% now "Ymd"%}" type="text/javascript"></script>
+{% endblock %}
+{% block exxtra_js %}
+{% endblock %}
+
+{% block main %}
+
+<form action="." method="post" id="formularioDREI" >
+            
+            {% csrf_token %}
+            {{ form.non_field_errors }}          
+            {{ form.id_padron}}
+            {{ form.anio }}
+            {{ form.mes}}
+            {{ form.vencimiento}}
+            {{ form.total}}
+            {{ form.minimo_global}}
+            {{ form.adic_detalle}}
+
+    
+    <div class="formulario datagrid col-xs-12 mas-izq mas-der">
+        
+    <div class="barra_titulo">
+        <b>{{titulo}}</b>        
+        <b class="pull-left">Padrón: {{cuota.padron}}</b>
+        <b class="pull-right">Vencimiento: {{cuota.vencimiento|date:"d/m/Y"}}</b>
+        <b style="margin-right:20px;" class="pull-right">Período: {{cuota.cuota|safe}} / {{cuota.anio|safe}}</b>
+    </div>     
+   
+   
+      <div id="divCargando">
+          <img id="imgCargando" src="{% static 'images/cargando.gif' %}" />
+      </div>
+     
+      <table>      
+        {# Campos para almacenar y pasar valores a los JS, no se llenan #}
+        <input type='hidden' name="id_cuota" value="{{ cuota.id_cuota|safe }}" />
+        <input type='hidden' name="alicuota_coeficiente" value="{{ sitio.alicuota_coeficiente }}" />
+        
+          {{ actividades_formset.management_form }}
+          {{ actividades_formset.non_field_errors }} 
+
+
+          {% for forma in actividades_formset.forms %}
+            {% if forloop.first %}
+                <thead>
+                    <th style="width:50%;">Detalle Actividad</th>
+                    <th>Base</th>  
+                    <th>Alícuota <small>{{sitio.alicuota_unidad}}</small></th>  
+                    <th>{% if minimo_por_activ == 'S' %}Mínimo Exigible{% endif %}</th>  
+                    <th>Total</th>  
+                </thead>
+                <tfoot align='right'>
+                    <tr>
+                        <td align="left" colspan="2">Mínimo Boleta: $ {{ form.minimo_global.value }}</td>                      
+                        <td colspan="3">SubTotal: $<span class="Subtotal">0</span></td>  
+                    </tr>
+                </tfoot>       
+                <tbody class="form-actividades" >
+            {% endif %}
+            {% for hidden in forma.hidden_fields %}
+                            {{ hidden }}
+             {% endfor %}
+            <tr>                
+                <td align="left"> 
+                    <small>
+                      <div class="input-group-descr">                       
+                          {{forma.activ_descr}} 
+                      </div>
+                    </small>
+                </td>
+                <td>                     
+                        <div class="input-group2">
+                          <span class="input-group-addon">$</span>
+                          {{forma.base|default_if_none:"0" }} 
+                        </div>
+                        
+                        {{ forma.base.errors.as_ul }}
+                </td>
+                <td> {{forma.alicuota|default_if_none:"0,00"}} {{ forma.alicuota.errors.as_ul }}</td>
+                <td>                   
+                        <div class="input-group2">
+                          <span class="input-group-addon">$</span>
+                          {{forma.minimo|default_if_none:"0,00"}}
+                        </div>  {{ forma.minimo.errors.as_ul }}</td>
+                <td><b> $<span class="totalActiv_{{forloop.counter0}}">{{forma.impuesto.value}}</span> </b></td>
+            </tr>
+            {% if forloop.last %}             
+                </tbody>            
+            {% endif %}
+        {% endfor %}
+      </table> 
+      <table>      
+              <tfoot class="formulario_total" align='right'>
+                  <tr>                      
+                      <td  colspan="3" >Total a Pagar:  $ <span class="totalFinal">0</span></td>  
+                  </tr>
+              </tfoot>       
+              <tbody class="form-adicionales" align='right'>
+                  {% if rectificativa %}
+                    <tr>
+                      <td></td><td></td>
+                      <td colspan"2">{% bootstrap_field form.pago_anterior show_label=False %}</td>
+                    </tr>                                
+                  {% endif %}                
+                  <tr><td></td><td></td>
+                     <td colspan"2">                                       
+                        {% bootstrap_field form.derecho_neto show_label=False %}                      
+                    </td>
+                  </tr>
+                   <tr><td></td><td></td>
+                     <td colspan"2">                                       
+                        {% bootstrap_field form.tasa_salud_publ show_label=False %}                      
+                    </td>
+                  </tr>
+                  <tr><td></td><td></td>
+                     <td colspan"2">
+                       <div class="form-group">
+                        <div class="input-group">
+                         {{form.adic_select}}                    
+                        <span class="input-group-addon"><strong>$</strong></span>
+                          {{form.adic_monto}}
+                          {{form.adic_monto.errors.as_ul }}
+                        </div> 
+                       </div>
+                      </div>
+                     </td>                    
+                  </tr>
+
+                  <tr><td></td><td></td>
+                     <td colspan"2">                                       
+                        {% bootstrap_field form.retenciones show_label=False %}                      
+                    </td>
+                  </tr>
+                   <tr><td></td><td></td>
+                     <td colspan"2">                                       
+                        {% bootstrap_field form.recargo show_label=False %}                      
+                    </td>
+                  </tr>
+                
+              </tbody>            
+      </table> 
+    </div>
+    <div class="row separacion">
+      <div class="col-xs-12">
+      <input class="btn btn-primary btn-md pull-right disabled" role="button" id="guardar" value="Confirmar"> 
+      <a href="{% url 'ver_cuotas' idp=cuota.id_padron  %}"  class="btn btn-md btn-default pull-left">Cancelar y Volver</a>   
+      </div>
+    </div>
+</form>
+
+    
+        
+
+{% if cartel_inicio %}    
+<div class="modal fade" id="modal_cartel" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog cartel">
+     <div class="modal-content">
+        <div class="modal-header alert alert-danger  centered"> 
+        <a class="close" data-dismiss="modal">×</a>           
+            <h5>¡¡Atención!!</h5>
+        </div>
+        <div class="modal-body">
+            <p>{{cartel_inicio|safe}} </p>
+        </div>       
+        
+     </div><!-- /.modal-content -->
+    </div>   
+</div>   
+{% endif %}
+{% endblock main %}
+

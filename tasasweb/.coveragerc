@@ -1,0 +1,8 @@
+[run]
+omit =
+    */site-packages/*
+    */distutils/*
+
+[report]
+skip_covered = True
+skip_empty = True

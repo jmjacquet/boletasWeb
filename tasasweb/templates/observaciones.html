@@ -1,0 +1,25 @@
+<br>
+<ul class="list-group ">   
+    <a  class="list-group-item active"><b>Información Adicional</b></a>
+   {% if sitio.linea1 %}
+    <li class="list-group-item formularios"><i>{{sitio.linea1}}</i>
+    </li>
+   {% endif %}
+   {% if sitio.linea2 %}
+    <li class="list-group-item formularios"><i>{{sitio.linea2}}</i>
+    </li>
+   {% endif %}
+
+</ul>
+
+<ul class="list-group formularios">
+    <a  class="list-group-item" target="_blank" href="{{DIR_MUNIS}}munis/{% if estudio %}manualEC.pdf{% else %}manualCP.pdf{% endif %}">
+    <b>Descargar Instructivo <i class="glyphicon glyphicon-cloud-download pull-right"> </i></b></a>
+</ul>
+
+<ul class="list-group formularios">
+    <a  class="list-group-item active botonesLogin" href="#modal_codigo" id="codigoInternet" role="button"><b>¿Cómo obtener el Código? <i class="glyphicon glyphicon-question-sign pull-right"></i></b></a>
+</ul>
+
+
+

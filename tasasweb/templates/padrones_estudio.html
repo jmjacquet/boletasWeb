@@ -1,0 +1,122 @@
+{% extends "index.html" %}
+
+{% block menuizq %}
+<br>
+<ul class="list-group">
+    <a  class="list-group-item active"><b>Estudio Contable</b></a>
+    <li class="list-group-item"><b>{{estudio.pk}} - {{estudio.denominacion}}</b></li>
+{% if padr %}
+    <li class="list-group-item">  Padrones Encontrados <span class="badge">{{padr|length}}</span></li>
+{% endif %}
+    {% block canCuotas %}
+    {% endblock canCuotas %}
+</ul>
+
+{% endblock menuizq %}
+
+
+{% block main %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>{{ message }}</strong>
+                
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="barra_titulo">
+            <b>Listado Completo de Padrones DReI a cargo del Estudio {{estudio.denominacion}}</b>    
+    </div>
+    <div class="datagrid col-md-12 mas-izq mas-der">
+    <table id="tablaPadrones" class="table compact table-no-bordered table-hover table-striped tabla_nueva nowrap ">    
+    <thead>
+        <tr class="info">
+            <th class="imprimir text-center" data-priority="4">Nº Padrón/Partida</th>            
+            <th class="imprimir text-left">Responsable</th>            
+            <th class="imprimir text-center">Total Cuotas</th>
+            <th class="no-sort text-center" >Ver Cuotas</th>            
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in padr %}
+        <tr>
+            <td class="text-center"><span class="label label-primary">{{ item.padron }}</span></td>            
+            <td title="{{ item.nombreResp}}" class="text-left">{{ item.nombreResp|truncatechars:60 }}</td>
+            <td>{{ item.cant_cuotas }} cuotas.</td>
+            <td><a  href="{% url 'ver_cuotas' item.id_padron %}" title="Ver Cuotas del Padrón {{item.padron}}"><span class="glyphicon glyphicon-search iconosTabla"></span> </a>
+            {% if user.is_superuser %} 
+                    <a  href="{% url 'drei_ddjja_list' item.id_padron %}" title="DDJJ Anual del Padrón {{item.padron}}"><span class="glyphicon glyphicon-list-alt iconosTabla"></span> </a>
+            {% endif %}
+             </td> 
+            
+        </tr>
+        {% endfor %}
+
+    </tbody>
+   
+    </table>
+    </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() { 
+
+                moment.locale('es');
+                $.fn.dataTable.moment('DD/MM/YYYY'); 
+                var tabla = $('#tablaPadrones').DataTable({
+                            "language": {
+                                "decimal": ",",
+                                "thousands": ".",                
+                                "sProcessing": "Procesando...",
+                                "sLengthMenu": "Mostrar _MENU_ registros",
+                                "sZeroRecords": "No se encontraron resultados",
+                                "sEmptyTable": "No hay registros en esta tabla",
+                                "sInfo": " _TOTAL_ padrones encontrados.",
+                                "sInfoEmpty": "No existen padrones para el período seleccionado",
+                                "sInfoFiltered": "(de un total de _MAX_ padrones)",
+                                "sInfoPostFix": "",
+                                "sSearch": "Buscar Padrón/Representante:",
+                                "sUrl": "",
+                                "sInfoThousands": ".",
+                                "sLoadingRecords": "Cargando...",
+                                "oPaginate": {
+                                    "sFirst": "Primero",
+                                    "sLast": "Último",
+                                    "sNext": "Siguiente",
+                                    "sPrevious": "Anterior"
+                                },
+                                "oAria": {
+                                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                },
+                                      
+                            },                      
+                            "columnDefs": [ {
+                                  "targets"  : 'no-sort',
+                                  "orderable": false,
+                                }],          
+                           "scrollY":        '65vh',
+                           "scrollCollapse": false,
+                           "paging":   false,
+                           "lengthMenu": [[20, 50, -1], [20, 50, "Todos"]],
+                           "autoWidth": true,           
+                           "order": [],
+                           "colReorder": true,
+                           "searching": true,
+                            "responsive": true,
+                            // dom: 'frtlip',
+                            // "dom": '<"top"i>rt<"pie"lp><"clear">',
+                             // "dom": '<"datatable_top"lf<t>"pie"ip>',
+                             "dom": "<'col-sm-12' <'row fondo_busqueda'<'col-sm-12'f>><'row'<tr>>>",
+                           
+                           
+                        });
+                });
+    </script>                
+{% endblock main %}
+
+
+
+
+

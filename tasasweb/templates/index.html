@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block extra_js %}
+		<script src="{% static 'js/selectTributo.js' %}" type="text/javascript" ></script>
+{% endblock %}
+
+
+{% block principal %}	
+	 {% if user.is_authenticated %}
+          <div class="row fondo-row">
+                <div class="col-xs-3 col-lg-2">            
+	                {% include "logoMuni.html" %}            
+	                
+	                {% block menuizq %}
+	                {% endblock menuizq%}
+	                
+	                {% include "observaciones.html" %}
+                </div>
+
+                <div class="col-xs-9 col-lg-10 mas-izq">
+	                {% block main %}
+	                {% endblock main%}
+                </div>
+          </div>                   
+
+          
+	 {% else %}
+	 	{% include "login.html" %}
+	 {% endif %}
+		
+
+<script>
+$(document).ready(function(){ 
+	$("#email").click(function(){
+    	var $usr = $("input[name='username']").val();
+    	if ($usr == '')
+	           	{alertify.alert('ATENCIÓN','El usuario/email no es válido!');    }
+	    else{  
+    	$.ajax({
+	        url: "/estudios/passwd/"+$usr,
+	        type: "get", // or "get"       
+	        success: function(data) {
+	              alertify.alert('ATENCIÓN',data);  
+        }});}    
+     });
+ 
+});
+</script>
+{% include "modales.html" %}
+{% endblock principal %}
+
+
+		

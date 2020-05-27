@@ -1,0 +1,27 @@
+<br>
+<ul class="list-group">
+	<a  class="list-group-item active"><b>{% if sitio.liquidacion_web != 'N'%}Liquidación {% endif %} {% if pago_online %} - Pago ONLine Cajero 24{% endif %}
+	</b>
+</a>
+<li class="list-group-item">  Cuotas Seleccionadas <span class="badge badge-info" id="montoLiqCant"> 0</span></li>
+<li class="list-group-item">  Total sin Punitorios <span class="badge badge-info" >$ <span id="montoLiq"> 0.00</span></span></li>
+<input class="hidden" value="0.00" id="totalLiq"/>
+<input class="hidden" value="0" id="totalLiqCant"/>
+{% if sitio.liquidacion_web != 'N'%}
+	<li class="list-group-item text-center">
+		<button id="generarLiq" type="button" class="btn btn-primary btn-xs boton_pagos" data-toggle="tooltip" data-container="body" data-placement="right" title="Seleccione las cuotas deseadas y presione para generar una boleta de Liquidación por el total a pagar."><i class="fa fa-save"></i> Generar Liquidación</button>
+	</li>
+{% endif %}
+{% if pago_online %}
+	<li class="list-group-item text-center">
+		<form  action="{{URL_CAJERO24}}" method="post" id="formPagos" target="_blank">
+			{% csrf_token %}
+			<input type="hidden" name="UrlExito" value="" />
+			<input type="hidden" name="UrlError" value="/" />
+			<input type="hidden" name="NoComercio" value="" />
+			<button id="generarPago" type="button" class="btn btn-primary btn-xs boton_pagos" data-toggle="tooltip" data-container="body" data-placement="right" title="Seleccione las cuotas deseadas y presione para generar el pago ONLine de las mismas."><i class="fa fa-money"></i> Generar Pago</button>
+		</form>
+	{% endif %}
+</li>
+</ul>
+

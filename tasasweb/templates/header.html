@@ -1,0 +1,25 @@
+{% load static from staticfiles %}
+<header>
+	<nav class="navbar navbar-default navbar-inverse" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<a class="navbar-brand" href="http://www.grupoguadalupe.com.ar"  >
+				<img class="logoGG" alt="20x20" src="{% static 'images/GG.png' %}" title="Ir a la Página de Grupo Guadalupe Sistemas" />
+			</a>				
+			
+        </div>
+			<ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li ><a href="/"><i class="glyphicon glyphicon-home"> </i><span> Inicio</span></a></li>
+                    {% if user.is_superuser %}
+                        <li class="divider-vertical"></li>
+                        <li><a href="/admin/"><i class="glyphicon glyphicon-wrench"> </i><span> Administrar</span></a></li>
+                    {% endif %}
+
+                    <li class="divider-vertical"></li>
+                {% endif %}
+                {% include "menues.html" %}
+			</ul>
+		
+	</nav>
+</header>

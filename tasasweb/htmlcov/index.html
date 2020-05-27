@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Coverage report</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.ba-throttle-debounce.min.js"></script>
+    <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(coverage.index_ready);
+    </script>
+</head>
+<body class="indexfile">
+<div id="header">
+    <div class="content">
+        <h1>Coverage report:
+            <span class="pc_cov">67%</span>
+        </h1>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <form id="filter_container">
+            <input id="filter" type="text" value="" placeholder="filter..." />
+        </form>
+    </div>
+</div>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
+    <div>
+    <p class="keyhelp">
+        <span class="key">n</span>
+        <span class="key">s</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">c</span> &nbsp; change column sorting
+    </p>
+    </div>
+</div>
+<div id="index">
+    <table class="index">
+        <thead>
+            <tr class="tablehead" title="Click to sort">
+                <th class="name left headerSortDown shortkey_n">Module</th>
+                <th class="shortkey_s">statements</th>
+                <th class="shortkey_m">missing</th>
+                <th class="shortkey_x">excluded</th>
+                <th class="right shortkey_c">coverage</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr class="total">
+                <td class="name left">Total</td>
+                <td>2740</td>
+                <td>892</td>
+                <td>184</td>
+                <td class="right" data-ratio="1848 2740">67%</td>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr class="file">
+                <td class="name left"><a href="api_serializers_py.html">api\serializers.py</a></td>
+                <td>39</td>
+                <td>1</td>
+                <td>0</td>
+                <td class="right" data-ratio="38 39">97%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="api_views_py.html">api\views.py</a></td>
+                <td>61</td>
+                <td>28</td>
+                <td>0</td>
+                <td class="right" data-ratio="33 61">54%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="manage_py.html">manage.py</a></td>
+                <td>19</td>
+                <td>6</td>
+                <td>0</td>
+                <td class="right" data-ratio="13 19">68%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="tadese_models_py.html">tadese\models.py</a></td>
+                <td>195</td>
+                <td>2</td>
+                <td>83</td>
+                <td class="right" data-ratio="193 195">99%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="tadese_punitorios_py.html">tadese\punitorios.py</a></td>
+                <td>217</td>
+                <td>50</td>
+                <td>0</td>
+                <td class="right" data-ratio="167 217">77%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="tadese_templatetags_filtros_py.html">tadese\templatetags\filtros.py</a></td>
+                <td>4</td>
+                <td>1</td>
+                <td>0</td>
+                <td class="right" data-ratio="3 4">75%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="tadese_utilidades_py.html">tadese\utilidades.py</a></td>
+                <td>55</td>
+                <td>3</td>
+                <td>16</td>
+                <td class="right" data-ratio="52 55">95%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="tadese_views_py.html">tadese\views.py</a></td>
+                <td>1252</td>
+                <td>751</td>
+                <td>33</td>
+                <td class="right" data-ratio="501 1252">40%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="tasasweb_settings_py.html">tasasweb\settings.py</a></td>
+                <td>61</td>
+                <td>5</td>
+                <td>0</td>
+                <td class="right" data-ratio="56 61">92%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="tasasweb_urls_py.html">tasasweb\urls.py</a></td>
+                <td>12</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="10 12">83%</td>
+            </tr>
+            <tr class="file">
+                <td class="name left"><a href="tasasweb_views_py.html">tasasweb\views.py</a></td>
+                <td>71</td>
+                <td>43</td>
+                <td>0</td>
+                <td class="right" data-ratio="28 71">39%</td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="no_rows">
+        No items found using the specified filter.
+    </p>
+</div>
+<div id="footer">
+    <div class="content">
+        <p>
+            <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.1</a>,
+            created at 2020-05-13 08:39
+        </p>
+    </div>
+</div>
+</body>
+</html>

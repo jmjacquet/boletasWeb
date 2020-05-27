@@ -1,0 +1,472 @@
+{% load static from staticfiles %}
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="es">
+<head>
+<link rel="stylesheet" href="{% static 'css/boletas.css' %}" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{{titulo}}</title>
+<style type="text/css">
+  @page {
+    margin: 0.5cm;
+    padding: 0;
+  }
+</style>
+</head>
+<body>
+<table width="100%" height="971" border="0" cellspacing="0">  
+ <tr>
+    <td width="20%" height="93" align="center">
+      <img src="{% static 'munis/' %}{{dirMuni}}/logo_boleta.png" alt="InfoMunicipio" width="62" height="62" /></td>
+    <td width="60%" align="center" > 
+      <p><span class="comuna_nombre">{{sitio.nombre}}</span><br /> <span class="comuna_datos">{{sitio.direccion}}<br /> {{sitio.varios1}}</span></p>
+    </td>
+    <td width="20%" align="right"  class="destino_cuerpo">
+      <table width="100" border="0" align="right" cellspacing="0">
+        <tr>
+          <td width="100" align="center" class="titulos tabla_izq tabla_arriba tabla_der">Nro. Cuota</td>
+        </tr>
+        <tr>
+          <td width="100" class="datos tabla_izq tabla_der" align="center">{{cuota.id_cuota|safe}}</td>
+        </tr>        
+        {% if codseg %}
+        <tr>
+          <td width="100" align="center" class="titulos tabla_izq tabla_der">Cód.Web/Seguridad</td>
+        </tr>        
+        <tr>
+          <td width="100%" class="datos tabla_izq tabla_der" align="center">{{codseg}}</td>
+        </tr>
+        {% endif %}
+        {% if codLINK %}
+        <tr>
+          <td width="100%" align="center" class="titulos tabla_izq tabla_der">Pago Electrónico</td>
+        </tr>
+        <tr>
+          <td width="100%" class="datos  tabla_izq tabla_der" align="center">{{codLINK}}</td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td width="100%" align="center" class="titulos tabla_izq tabla_der">Fecha Impresión</td>
+        </tr>
+        <tr>
+          <td width="100%" class="datos tabla_izq tabla_abajo tabla_der" align="center">{{fecha|date:"d/m/Y"}}</td>
+        </tr>
+      </table>
+    </td>
+  </tr>   
+  <tr>
+    <td height="20" colspan="3" class="comuna_nombre" align="center">{{titulo}}</td>
+  </tr> 
+  <tr>
+    <td height="49" colspan="3" align="left" >
+     <table width="100%">
+     <tr>
+      <td width="75%" valign="top"> 
+      <table width="100%" border="0" cellspacing="0" class="datos">
+        <tr>
+          <td width="25%" class="titulos">Padrón</td>
+          <td colspan="3" class="titulos">Razon Social</td>
+          <td width="15%" class="titulos">Período</td>                  
+        </tr>
+        <tr>
+          <td class="datos">{{cuota.padron}}</td>
+          <td colspan="3" class="datos">{{cuota.nombre_boleta}}</td>
+          <td class="datos">{{cuota.cuota}}/{{cuota.anio|safe}}</td>                    
+        </tr>
+        <tr>                   
+          <td width="25%" class="titulos">Importe Mínimo</td>          
+          <td width="25%" class="titulos">Importe Orig.</td>
+          <td width="25%" class="titulos">Venc.Orig.</td>
+          <td width="25%" class="titulos">Importe Liq.</td>
+          <td width="25%" class="titulos">Fecha Liq.</td>          
+        </tr>
+        <tr class="datos">          
+          <td class="datos">${{minimo_principal}}</td>          
+          <td class="datos">${{cuota.saldo|default_if_none:0|floatformat:2}}</td>
+          <td class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+          <td class="datos">${{boleta.total|default_if_none:0|floatformat:2}}</td>          
+          <td class="datos">{{boleta.fechapago|date:"d/m/Y"}}</td>
+        </tr>
+      </table>
+      </td>
+       <td  width="25%" valign="top" class="tabla_izq tabla_der tabla_abajo">
+        <table width="100%" border="0" cellspacing="0">
+          <tr>
+            <td class="titulo_actividad" colspan="2">Adicionales</td>            
+          </tr>
+          {% if boleta.pago_anterior %}
+          <tr>
+            <td class=" datos">Importe Abonado</td>
+            <td class=" datos importe_">- ${{boleta.pago_anterior|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td class=" datos">Derecho Neto</td>
+            <td class=" datos importe_">${{boleta.derecho_neto|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          <tr>
+            <td class=" datos">Tasa Salud Pública</td>
+            <td class=" datos importe_">${{boleta.tasa_salud_publ|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% if boleta.adic_detalle %}
+          <tr>
+            <td class=" datos">{{boleta.adic_detalle}}</td>
+            <td class=" datos importe_">${{boleta.adic_monto|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% endif %}
+          <tr class="">
+            <td class="datos ">{{detalle_retenc}}</td>
+            <td class="datos  importe_">${{boleta.retenciones|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% if not boleta.pago_anterior or not boleta.adic_detalle %}<tr><td></td></tr>{% endif %}
+        </table>
+      </td>
+    </tr>
+    </table>
+    </td>
+  </tr>  
+  <tr height="49" >
+    <td height="49" colspan="3" >   
+      <table width="100%" border="0" cellspacing="0">
+        <tr>          
+          <td width="75%" class="titulo_actividad tabla_izq tabla_arriba">Detalle Actividad</td>
+          <td width="10%" class="titulo_actividad tabla_arriba">Base</td>
+          <td width="5%"  class="titulo_actividad tabla_arriba">Alic.</td>
+          <td width="10%" class="titulo_actividad tabla_arriba tabla_der">Importe</td>
+        </tr>
+        {% for item in actividades %}
+          {% if forloop.counter == 10 %}
+            <tr class="datos_actividad tabla_abajo tabla_der tabla_izq" >
+              <td class="tabla_izq" colspan="4"><small>......</small></td>          
+            </tr>              
+          {% elif forloop.counter > 10 %}
+
+          {% else %}      
+            <tr class="datos_actividad {% if forloop.last %}tabla_abajo{%endif%}" >
+              <td class="tabla_izq">{{item|default_if_none:''|truncatechars:170}}</td>
+              <td class=" importe_">${{item.base|default_if_none:0|floatformat:2}}</td>
+              <td class="importe_">{{item.alicuota|default_if_none:0|floatformat:2}}</td>
+              <td class="tabla_der importe_">${{item.impuesto|default_if_none:0|floatformat:2}}</td>
+            </tr>
+          {% endif %}      
+        {% endfor %} 
+      </table> 
+   </td>
+  </tr> 
+  <tr>
+    <td valign="top" colspan="3"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr>                   
+          <td class="titulo_actividad">Total Adicionales</td>          
+          <td class="titulo_actividad">Total Actividades</td>
+          <td class="titulo_actividad">Importe Base</td>
+          <td class="titulo_actividad">Recargo/Punitorios</td>
+          <td class="titulo_actividad tabla_arriba tabla_abajo tabla_izq tabla_der">Total a Pagar</td>          
+          <td class="titulo_actividad tabla_arriba tabla_abajo tabla_izq tabla_der">Vencimiento</td>          
+        </tr>
+        <tr>          
+          <td class="datos_i">${{tot_adicionales|default_if_none:0|floatformat:2}}</td>          
+          <td class="datos_i">${{totActiv|default_if_none:0|floatformat:2}}</td>
+          <td class="datos_i">${{subtotal|default_if_none:0|floatformat:2}}</td>
+          <td class="datos_i tabla_der">${{recargo|default_if_none:0|floatformat:2}}</td>          
+          <td class="importes_totales tabla_abajo tabla_izq tabla_der">${{punit1|default_if_none:0|floatformat:2}}</td>
+          <td class="importes_totales tabla_abajo tabla_izq tabla_der">{{vencimiento|date:"d/m/Y"}}</td>
+        </tr>
+      </table>
+      </td>
+  </tr>
+  <tr><td colspan="3"></td></tr>             
+  <tr>
+    <td height="20" colspan="3" align="center"  >
+      <img src="data:image/png;base64,{{codbar}}" class="CB" >      
+    </td>
+  </tr>
+    
+  <tr>
+    <td height="30" colspan="3" align="center" valign="middle">{{codigo}}
+      {% if leyenda %}<br>{{leyenda|default_if_none:''|upper}}  {% endif %}
+      <hr> 
+    </td>
+  </tr>   
+  <tr><td colspan="3"></td></tr>      
+  <tr>
+    <td height="20" colspan="3" class="comuna_nombre" align="center">{{sitio.nombre}} - {{titulo}}</td>
+  </tr> 
+  <tr>
+    <td height="49" colspan="3" align="left" >
+     <table width="100%">
+     <tr>
+      <td width="75%" valign="top"> 
+      <table width="100%" border="0" cellspacing="0" class="datos">
+        <tr>
+          <td width="25%" class="titulos">Padrón</td>
+          <td colspan="3" class="titulos">Razon Social</td>
+          <td width="15%" class="titulos">Período</td>                  
+        </tr>
+        <tr>
+          <td class="datos">{{cuota.padron}}</td>
+          <td colspan="3" class="datos">{{cuota.nombre_boleta}}</td>
+          <td class="datos">{{cuota.cuota}}/{{cuota.anio|safe}}</td>                    
+        </tr>
+        <tr>                   
+          <td class="titulos">Importe Mínimo</td>          
+          <td class="titulos">Importe Orig.</td>
+          <td class="titulos">Venc.Orig.</td>
+          <td class="titulos">Importe Liq.</td>
+          <td class="titulos">Fecha Liq.</td>          
+        </tr>
+        <tr class="datos">          
+          <td class="datos">${{minimo_principal}}</td>          
+          <td class="datos">${{cuota.saldo|default_if_none:0|floatformat:2}}</td>
+          <td class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+          <td class="datos">${{boleta.total|default_if_none:0|floatformat:2}}</td>          
+          <td class="datos">{{boleta.fechapago|date:"d/m/Y"}}</td>
+        </tr>
+        <tr class="datos">                   
+          <td class="titulos">Nº Cuota</td>          
+          <td class="titulos">Fecha Impresión</td>
+          <td class="titulos">{% if codLINK %}Cód.Pago Electrónico{% endif %}</td>
+          <td colspan="2" class="titulos">{% if codseg %}Cód.Web/Seguridad{% endif %}</td>          
+        </tr>
+        <tr class="datos">          
+          <td class="datos">{{cuota.id_cuota|safe}}</td>          
+          <td class="datos">{{fecha|date:"d/m/Y"}}</td>
+          <td class="datos">{% if codLINK %}{{codLINK}}{% endif %}</td>
+          <td colspan="2" class="datos">{% if codseg %}{{codseg}}{% endif %}</td>                    
+        </tr>
+      </table>
+      </td>
+       <td  width="25%" valign="top" class="tabla_izq tabla_der tabla_abajo" >
+        <table width="100%" border="0" cellspacing="0">
+          <tr>
+            <td class=" titulo_actividad" colspan="2">Adicionales</td>            
+          </tr>
+          {% if boleta.pago_anterior %}
+          <tr>
+            <td class=" datos">Importe Abonado</td>
+            <td class=" datos importe_">- ${{boleta.pago_anterior|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td class=" datos">Derecho Neto</td>
+            <td class=" datos importe_">${{boleta.derecho_neto|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          <tr>
+            <td class=" datos">Tasa Salud Pública</td>
+            <td class=" datos importe_">${{boleta.tasa_salud_publ|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% if boleta.adic_detalle %}
+          <tr>
+            <td class="datos">{{boleta.adic_detalle}}</td>
+            <td class="datos importe_">${{boleta.adic_monto|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% endif %}
+          <tr class="">
+            <td class="datos ">{{detalle_retenc}}</td>
+            <td class="datos importe_">${{boleta.retenciones|default_if_none:0|floatformat:2}}</td>
+          </tr>                    
+        </table>
+      </td>
+    </tr>
+    </table>
+    </td>
+  </tr>     
+  <tr height="49" >
+    <td height="49" colspan="3" >   
+      <table width="100%" border="0" cellspacing="0">
+          <tr>          
+            <td width="75%" class="titulo_actividad tabla_izq tabla_arriba">Detalle Actividad</td>
+            <td width="10%" class="titulo_actividad tabla_arriba">Base</td>
+            <td width="5%"  class="titulo_actividad tabla_arriba">Alic.</td>
+            <td width="10%" class="titulo_actividad tabla_arriba tabla_der">Importe</td>
+          </tr>
+        {% for item in actividades %}
+          {% if forloop.counter == 7 %}
+            <tr class="datos_actividad tabla_abajo tabla_der tabla_izq" >
+              <td width="100%" colspan="4"> ...... ({{cant_actividades_restantes}} actividades restantes) ......</td>            
+            </tr>              
+          {% elif forloop.counter > 7 %}
+
+          {% else %}      
+            <tr class="datos_actividad {% if forloop.last %}tabla_abajo{%endif%}" >
+              <td width="75%" class="tabla_izq">{{item|default_if_none:''|truncatechars:170}}</td>
+              <td width="10%" class=" importe_">${{item.base|default_if_none:0|floatformat:2}}</td>
+              <td width="5%" class="importe_">{{item.alicuota|default_if_none:0|floatformat:2}}</td>
+              <td width="10%"class="tabla_der importe_">${{item.impuesto|default_if_none:0|floatformat:2}}</td>
+            </tr>
+          {% endif %}      
+        {% endfor %}      
+      </table>  
+   </td>
+  </tr>    
+  <tr>
+    <td valign="top" colspan="3"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr>                   
+          <td class="titulo_actividad">Total Adicionales</td>          
+          <td class="titulo_actividad">Total Actividades</td>
+          <td class="titulo_actividad">Importe Base</td>
+          <td class="titulo_actividad">Recargo/Punitorios</td>
+          <td class="titulo_actividad tabla_arriba tabla_abajo tabla_izq tabla_der">Total a Pagar</td>          
+          <td class="titulo_actividad tabla_arriba tabla_abajo tabla_izq tabla_der">Vencimiento</td>
+        </tr>
+        <tr>          
+          <td class="datos_i">${{tot_adicionales|default_if_none:0|floatformat:2}}</td>          
+          <td class="datos_i">${{totActiv|default_if_none:0|floatformat:2}}</td>
+          <td class="datos_i">${{subtotal|default_if_none:0|floatformat:2}}</td>
+          <td class="datos_i tabla_der">${{recargo|default_if_none:0|floatformat:2}}</td>          
+          <td class="importes_totales tabla_abajo tabla_izq tabla_der">${{punit1|default_if_none:0|floatformat:2}}</td>
+          <td class="importes_totales tabla_abajo tabla_izq tabla_der">{{vencimiento|date:"d/m/Y"}}</td>
+        </tr>
+      </table>
+      </td>
+  </tr>     
+  <tr><td colspan="3"></td></tr>     
+  <tr>
+    <td height="20" colspan="3" align="center"  >
+      <img src="data:image/png;base64,{{codbar}}" class="CB" >      
+    </td>
+  </tr>
+  <tr>
+    <td height="30" colspan="3" align="center" valign="middle">{{codigo}}
+      <hr>     
+    </td>
+  </tr> 
+  <tr><td colspan="3"></td></tr>       
+  <tr>
+    <td height="20" colspan="3" class="comuna_nombre" align="center">{{sitio.nombre}} - {{titulo}}</td>
+  </tr> 
+  <tr>
+    <td height="49" colspan="3" align="left" >
+     <table width="100%">
+     <tr>
+      <td width="75%" valign="top"> 
+      <table width="100%" border="0" cellspacing="0" class="datos">
+        <tr>
+          <td width="25%" class="titulos">Padrón</td>
+          <td colspan="3" class="titulos">Razon Social</td>
+          <td width="15%" class="titulos">Período</td>                  
+        </tr>
+        <tr>
+          <td class="datos">{{cuota.padron}}</td>
+          <td colspan="3" class="datos">{{cuota.nombre_boleta}}</td>
+          <td class="datos">{{cuota.cuota}}/{{cuota.anio|safe}}</td>                    
+        </tr>
+        <tr>                   
+          <td class="titulos">Importe Mínimo</td>          
+          <td class="titulos">Importe Orig.</td>
+          <td class="titulos">Venc.Orig.</td>
+          <td class="titulos">Importe Liq.</td>
+          <td class="titulos">Fecha Liq.</td>          
+        </tr>
+        <tr class="datos">          
+          <td class="datos">${{minimo_principal}}</td>          
+          <td class="datos">${{cuota.saldo|default_if_none:0|floatformat:2}}</td>
+          <td class="datos">{{cuota.vencimiento|date:"d/m/Y"}}</td>
+          <td class="datos">${{boleta.total|default_if_none:0|floatformat:2}}</td>          
+          <td class="datos">{{boleta.fechapago|date:"d/m/Y"}}</td>
+        </tr>
+        <tr class="datos">                 
+          <td class="titulos">Nº Cuota</td>          
+          <td class="titulos">Fecha Impresión</td>
+          <td class="titulos">{% if codLINK %}Cód.Pago Electrónico{% endif %}</td>
+          <td colspan="2" class="titulos">{% if codseg %}Cód.Web/Seguridad{% endif %}</td>          
+        </tr>
+        <tr class="datos">          
+          <td class="datos">{{cuota.id_cuota|safe}}</td>          
+          <td class="datos">{{fecha|date:"d/m/Y"}}</td>
+          <td class="datos">{% if codLINK %}{{codLINK}}{% endif %}</td>
+          <td colspan="2" class="datos">{% if codseg %}{{codseg}}{% endif %}</td>                    
+        </tr>
+      </table>
+      </td>
+       <td  width="25%" valign="top" class="tabla_izq tabla_der tabla_abajo">
+        <table width="100%" border="0" cellspacing="0" >
+          <tr>
+            <td class=" titulo_actividad" colspan="2">Adicionales</td>            
+          </tr>
+          {% if boleta.pago_anterior %}
+          <tr>
+            <td class=" datos">Importe Abonado</td>
+            <td class=" datos importe_">- ${{boleta.pago_anterior|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td class=" datos">Derecho Neto</td>
+            <td class=" datos importe_">${{boleta.derecho_neto|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          <tr>
+            <td class=" datos">Tasa Salud Pública</td>
+            <td class=" datos importe_">${{boleta.tasa_salud_publ|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% if boleta.adic_detalle %}
+          <tr>
+            <td class=" datos">{{boleta.adic_detalle}}</td>
+            <td class=" datos importe_">${{boleta.adic_monto|default_if_none:0|floatformat:2}}</td>
+          </tr>
+          {% endif %}
+          <tr class="">
+            <td class="datos ">{{detalle_retenc}}</td>
+            <td class="datos  importe_">${{boleta.retenciones|default_if_none:0|floatformat:2}}</td>
+          </tr>                    
+        </table>
+      </td>
+    </tr>
+    </table>
+    </td>
+  </tr>  
+  <tr height="49" >
+    <td height="49" colspan="3" >   
+      <table width="100%" border="0" cellspacing="0">
+          <tr>          
+            <td width="75%" class="titulo_actividad tabla_izq tabla_arriba">Detalle Actividad</td>
+            <td width="10%" class="titulo_actividad tabla_arriba">Base</td>
+            <td width="5%"  class="titulo_actividad tabla_arriba">Alic.</td>
+            <td width="10%" class="titulo_actividad tabla_arriba tabla_der">Importe</td>
+          </tr>
+        {% for item in actividades %}
+          {% if forloop.counter == 7 %}
+            <tr class="datos_actividad tabla_abajo tabla_der tabla_izq" >
+              <td width="100%" colspan="4"> ...... ({{cant_actividades_restantes}} actividades restantes) ......</td>            
+            </tr>              
+          {% elif forloop.counter > 7 %}
+
+          {% else %}      
+            <tr class="datos_actividad {% if forloop.last %}tabla_abajo{%endif%}" >
+              <td width="75%" class="tabla_izq">{{item|default_if_none:''|truncatechars:170}}</td>
+              <td width="10%" class=" importe_">${{item.base|default_if_none:0|floatformat:2}}</td>
+              <td width="5%" class="importe_">{{item.alicuota|default_if_none:0|floatformat:2}}</td>
+              <td width="10%"class="tabla_der importe_">${{item.impuesto|default_if_none:0|floatformat:2}}</td>
+            </tr>
+          {% endif %}      
+        {% endfor %}      
+      </table>  
+   </td>
+  </tr>  
+  <tr>
+    <td valign="top" colspan="3"> 
+      <table width="100%" border="0" cellspacing="0">
+        <tr>                   
+          <td class="titulo_actividad">Total Adicionales</td>          
+          <td class="titulo_actividad">Total Actividades</td>
+          <td class="titulo_actividad">Importe Base</td>
+          <td class="titulo_actividad">Recargo/Punitorios</td>
+          <td class="titulo_actividad tabla_arriba tabla_abajo tabla_izq tabla_der">Total a Pagar</td>          
+          <td class="titulo_actividad tabla_arriba tabla_abajo tabla_izq tabla_der">Vencimiento</td>
+        </tr>
+        <tr>          
+          <td class="datos_i">${{tot_adicionales|default_if_none:0|floatformat:2}}</td>          
+          <td class="datos_i">${{totActiv|default_if_none:0|floatformat:2}}</td>
+          <td class="datos_i">${{subtotal|default_if_none:0|floatformat:2}}</td>
+          <td class="datos_i tabla_der">${{recargo|default_if_none:0|floatformat:2}}</td>          
+          <td class="importes_totales tabla_abajo tabla_izq tabla_der">${{punit1|default_if_none:0|floatformat:2}}</td>
+          <td class="importes_totales tabla_abajo tabla_izq tabla_der">{{vencimiento|date:"d/m/Y"}}</td>
+        </tr>
+      </table>
+      </td>
+  </tr>     
+  
+   
+</table>
+</body>
+</html>

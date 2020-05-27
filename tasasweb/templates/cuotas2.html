@@ -1,0 +1,333 @@
+{% extends "index.html" %}
+{% load static from staticfiles %}
+{% block extra_js %}
+    <script src="{% static 'js/scriptsLiq.js'%}?{% now "Ymd"%}" type="text/javascript"></script>
+{% endblock %}
+{% block main %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>{{ message }}</strong>
+                
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="datagrid col-md-12 mas-izq mas-der">
+        
+        <div class="barra_titulo">
+            <b>Listado Completo de Cuotas del padrón {{ padron.padron }} ({{ padron.tributo__abreviatura }})</b>
+            {% if user.is_staff %} IdPadr: {{ padron.id_padron }}{% endif %}
+        </div>       
+        <table id="tablaCuotas" class="table compact  table-no-bordered tabla_nueva nowrap">
+                    <thead>
+                    <tr>
+                        <th class="no-sort" data-priority="1">
+                            {% if sitio.liquidacion_web != 'N' or pago_online %}
+                                <input type="checkbox" id="checkall" title="Seleccionar Todas"/>
+                            {% endif %}
+                        </th>
+                        <th class="imprimir text-center" data-priority="2">Año</th>
+                        <th class="imprimir text-center" data-priority="3">Cuota</th>                    
+                        <th class="imprimir text-center" data-priority="4">Estado</th>
+                        <th class="imprimir text-center" data-priority="5">Vencim.</th>
+                        {% if padron.tributo == 6 %}                    
+                        <th class="imprimir text-center" data-priority="4">F.Pago</th>
+                        <th class="imprimir text-center" data-priority="4">Mínimo</th>
+                        <th class="imprimir text-center" data-priority="4">Liquidado</th>
+                        {% else %}                    
+                        <th class="imprimir text-center" data-priority="4">2ºVencim.</th>
+                        <th class="imprimir text-center" data-priority="4">F.Pago</th>
+                        <th class="imprimir text-center" data-priority="4">Saldo s/Interés</th>                    
+                        {% endif %}                   
+                        <th class="no-sort text-center"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="detalleCuotas">
+                        {% for item in cuotas %}
+                            <tr 
+                            {% if item.fechapago or item.estado >= 100 or item.saldo < 0 %}
+                                class="pagada">
+                                <td></td>
+                                {% else %}
+                                    >
+                                <td>
+                                {% if sitio.liquidacion_web != 'N' or pago_online %}
+                                    {% if tributo == 6 %}
+                                        {% if item.boleta and not item.pago_anterior %}
+                                            {% if item.get_boleta_venc %}
+                                                <input type="checkbox" class='tildado' id="chk_{{forloop.counter0}}" value="{{ item.saldo }}"/>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% else %}
+                                        <input type="checkbox" class='tildado' id="chk_{{forloop.counter0}}" value="{{ item.saldo }}"/>
+                                    {% endif %}
+                                {% endif %}
+                                </td>
+                                {% endif %}
+                                <td>{{ item.anio|safe }}</td>
+                                <td>{{ item.cuota|safe }}</td>
+                                <td class="negrita">{% if item.pago_anterior  %}RECTIFICATIVA{% else %}{{ item.get_estado }}{% endif %}</td>
+                                <td>{{ item.get_vencimiento|date:"d/m/Y" }}</td>
+                                {% if padron.tributo == 6 %}   
+                                    <td>{{ item.fechapago|date:"d/m/Y" }}</td>
+                                    <td class="importe">${{ item.saldo|default_if_none:0.00 }}</td>
+                                    <td class="importe">{% if item.boleta %}${{ item.total|default_if_none:'' }}{% endif %}</td>
+                                {% else %}
+                                    <td>{{ item.get_vencimiento2|date:"d/m/Y" }}</td>
+                                    <td>{{ item.fechapago|date:"d/m/Y" }}</td>
+                                    <td class="importe">${{ item.saldo }}</td>  
+                                {% endif %}
+                                <td>
+                                    <input class="hidden" value="{{ item.saldo }}" id="saldo_chk_{{forloop.counter0}}"/>
+                                    {% if item.boleta %}
+                                        <input class="hidden" value="{{ item.total }}" id="total_chk_{{forloop.counter0}}"/>
+                                    {% endif %}
+                                    <input class="hidden" value="{{item.pk|safe}}" id="chk_{{forloop.counter0}}_id_cuota"/>
+                                    
+                                    {% if item.estado == 100 %}
+                                        <i class="glyphicon glyphicon-ok-circle iconosTabla" aria-hidden="true" title="Boleta en Estado Judicial" onClick="alertify.set('notifier','position', 'top-right');alertify.error('La cuota {{ item.cuota }}/{{ item.anio|safe }} está en estado Judicial! (contáctese con el municipio)');"></i>
+                                    
+                                    {% elif item.estado == 1000 %}
+                                        <i class="glyphicon glyphicon-ok-circle iconosTabla" aria-hidden="true" title="Boleta con pago pendiente" onClick="alertify.set('notifier','position', 'top-right');alertify.error('La cuota {{ item.cuota }}/{{ item.anio|safe }} está en proceso de Pago! (contáctese con el municipio)');"></i>
+                                    {% elif item.saldo < 0  %}
+                                        <a title="Boleta Saldo en Negativo" onClick="alertify.set('notifier','position', 'top-right'); alertify.error('La cuota {{ item.cuota }}/{{ item.anio|safe }} se encuentra con saldo negativo. (Por favor comuníquese con el Municipio).');" >
+                                        <span class="glyphicon glyphicon-ok-circle iconosTabla"></span></a>
+
+                                    {% elif padron.tributo == 6 %}
+                                        <!--ADEUDADAS-->
+                                        {% if not item.fechapago %}
+                                            <!--LIQUIDADA-->
+                                            {% if item.boleta %}
+                                                {% if item.pago_anterior %}
+                                                    <!--RECTIFICATIVA-->
+                                                    {% if fecha_hoy <= item.fechapago %}
+                                                        <a  title="Imprimir Boleta {{ item.cuota|safe }}/{{ item.anio|safe }}" onClick="window.open('{% url 'imprimirPDFBoleta' item.pk item.boleta %}');" >
+                                                            <span class="glyphicon glyphicon-print iconosTabla"></span></a>
+                                                    {% endif %}
+                                                        <a title="Eliminar Rectificativa" onClick="alerta= alertify.dialog('confirm').set({'labels':{ok:'Aceptar', cancel:'Cancelar'},'message': '¿Desea eliminar la Boleta Rectificativa seleccionada?' ,transition:'fade','onok': function(){ window.location.href = '{% url 'eliminar_boleta' idb=item.boleta  %}'; },'oncancel': function(){ return true;} }); alerta.setting('modal', true); alerta.setHeader('ELIMINAR RECTIFICATIVA'); alerta.show(); return true;" ><i class="glyphicon glyphicon-trash iconosTabla"></i></a>
+                                                {% else %}
+                                                    <!--LIQUIDADA-->
+                                                    {% if fecha_hoy <= item.fechapago %}
+                                                        <a  title="Imprimir Boleta {{ item.cuota|safe }}/{{ item.anio|safe }}" onClick="window.open('{% url 'imprimirPDF' item.pk %}');" ><span class="glyphicon glyphicon-print iconosTabla"></span></a>
+                                                    {% endif %}
+                                                    <a class="cuota" id="{{item.pk}}" title="Actualizar Período DReI {{ item.cuota|safe }}/{{ item.anio|safe }} (modificar Liquidación existente)" href="{% url 'drei_reliquidarBoleta' item.boleta %}"><span class="glyphicon glyphicon-edit iconosTabla"></span></a>
+                                                    
+                                                    {% if puede_rectificar %}
+                                                        <a class="cuota" id="{{item.pk|safe}}" title="Rectificar Período DReI {{ item.cuota|safe }}/{{ item.anio|safe }} (crea Boleta Rectificativa)" href="{% url 'drei_rectificarBoleta' idb=item.boleta %}"><span class="glyphicon glyphicon-registration-mark iconosTabla"></span></a>
+                                                    {% endif %}
+                                                    <a title="Eliminar Boleta Liquidada" onClick="alerta= alertify.dialog('confirm').set({'labels':{ok:'Aceptar', cancel:'Cancelar'},'message': '¿Desea eliminar la Liquidación de la Boleta seleccionada?' ,transition:'fade','onok': function(){ window.location.href = '{% url 'eliminar_boleta' idb=item.boleta  %}'; },'oncancel': function(){ return true;} }); alerta.setting('modal', true); alerta.setHeader('ELIMINAR LIQUIDACION BOLETA'); alerta.show(); return true;" ><i class="glyphicon glyphicon-trash iconosTabla"></i></a>
+                                                {% endif %}
+                                            {% else %}
+                                                    <!--PENDIENTE-->
+                                                    {% if item.saldo < 0  %}
+                                                        <a title="Boleta Saldo en Negativo" onClick="alertify.set('notifier','position', 'top-right'); alertify.error('La cuota {{ item.cuota|safe }}/{{ item.anio|safe }} se encuentra con saldo negativo. (Por favor comuníquese con el Municipio).');" >
+                                                            <span class="glyphicon glyphicon-ok-circle iconosTabla"></span></a>
+                                                    {% else %}
+                                                            <a class="cuota" id="{{item.pk}}" title="Liquidar Período DReI {{ item.cuota|safe }}/{{ item.anio|safe }}" href="{% url 'drei_liquidarBoleta' item.pk %}">
+                                                                <span class="glyphicon glyphicon-pencil iconosTabla"></span></a>
+                                                    {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                                        <!--PAGADAS-->
+                                                        <a title="Boleta Paga" onClick="alertify.set('notifier','position', 'top-right'); alertify.error('La cuota {{ item.cuota|safe }}/{{ item.anio|safe }} ya fué pagada!');" >
+                                                            <span class="glyphicon glyphicon-ok-circle iconosTabla"></span></a>
+                                                            {% if item.boleta %}
+                                                                <!--LIQUIDADA-->
+                                                                {% if modif_bases_imp %}
+                                                                    <a class="cuota" id="{{item.pk|safe}}" title="Modificar Bases Imponibles" href="{% url 'drei_modif_bases' idb=item.boleta %}"><span class="glyphicon glyphicon-edit iconosTabla"></span></a>
+                                                                {% endif %}
+                                                                {% if item.pago_anterior %}
+                                                                    <!--RECTIFICATIVA-->
+                                                                    <a  title="Imprimir Boleta {{ item.cuota|safe }}/{{ item.anio|safe }}" onClick="window.open('{% url 'imprimirPDFBoleta' item.pk item.boleta %}');" >
+                                                                        <span class="glyphicon glyphicon-print iconosTabla"></span></a>
+                                                                        <a title="Eliminar Rectificativa" onClick="alerta= alertify.dialog('confirm').set({'labels':{ok:'Aceptar', cancel:'Cancelar'},'message': '¿Desea eliminar la Boleta Rectificativa seleccionada?' ,transition:'fade','onok': function(){ window.location.href = '{% url 'eliminar_boleta' idb=item.boleta  %}'; },'oncancel': function(){ return true;} }); alerta.setting('modal', true); alerta.setHeader('ELIMINAR RECTIFICATIVA'); alerta.show(); return true;" ><i class="glyphicon glyphicon-trash iconosTabla"></i></a>
+                                                                {% else %}
+                                                                    <!--PENDIENTE-->
+                                                                    {% if puede_rectificar %}
+                                                                        <a class="cuota" id="{{item.pk|safe}}" title="Rectificar Período DReI {{ item.cuota|safe }}/{{ item.anio|safe }} (crea Boleta Rectificativa)" href="{% url 'drei_rectificarBoleta' idb=item.boleta %}"><span class="glyphicon glyphicon-registration-mark iconosTabla"></span></a>
+                                                                    {% endif %}
+                                                                {% endif %}
+                                                            {% else %}
+                                                                    <!--PENDIENTE-->
+                                                                    {% if puede_rectificar %}
+                                                                        <a class="cuota" id="{{item.pk|safe}}" title="Rectificar Período DReI {{ item.cuota }}/{{ item.anio|safe }} (crea Boleta Rectificativa)" href="{% url 'drei_rectificarNewBoleta' item.pk %}"><span class="glyphicon glyphicon-registration-mark iconosTabla"></span></a>
+                                                                    {% endif %}
+                                                            {% endif %}
+                                        {% endif %}
+                                                            
+                                    
+                                        
+                                    {% elif not item.fechapago  %}
+                                    <a  title="Imprimir Boleta {{ item.cuota }}/{{ item.anio|safe }}" onClick="window.open('{% url 'imprimirPDF' item.pk %}');" >
+                                        <span class="glyphicon glyphicon-print iconosTabla"></span></a>
+                                    {% else %}
+                                        <i class="glyphicon glyphicon-ok-circle iconosTabla" aria-hidden="true" title="Boleta Paga" onClick="alertify.set('notifier','position', 'top-right');alertify.error('La cuota {{ item.cuota }}/{{ item.anio|safe }} ya fué pagada! {{item.pk}}');"></i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                                
+                                            
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            {% if padron.tributo == 6 %}   
+                                <th></th>
+                                <th class="importe"></th>
+                                <th class="importe"></th>    
+                            {% else %}     
+                                <th></th>
+                                <th></th>
+                                <th class="importe"></th> 
+                            {% endif %}
+                            <th></th>
+                        </tr>
+                    </tfoot>
+        </table>
+    </div>
+
+    
+    <input class="hidden" value="{{ padron.id_padron|safe }}" id="id_padron"/>
+        <script type="text/javascript">
+
+    $(document).ready(function() { 
+
+                moment.locale('es');
+                $.fn.dataTable.moment('DD/MM/YYYY'); 
+                var tabla = $('#tablaCuotas').DataTable({
+                            "language": {
+                                "decimal": ",",
+                                "thousands": ".",                
+                                "sProcessing": "Procesando...",
+                                "sLengthMenu": "Mostrar _MENU_ registros",
+                                "sZeroRecords": "No se encontraron resultados",
+                                "sEmptyTable": "No hay registros en esta tabla",
+                                "sInfo": " _TOTAL_ cuotas encontradas.",
+                                "sInfoEmpty": "No existen cuotas para el período seleccionado",
+                                "sInfoFiltered": "(de un total de _MAX_ cuotas)",
+                                "sInfoPostFix": "",
+                                "sSearch": "Buscar:",
+                                "sUrl": "",
+                                "sInfoThousands": ".",
+                                "sLoadingRecords": "Cargando...",
+                                "oPaginate": {
+                                    "sFirst": "Primero",
+                                    "sLast": "Último",
+                                    "sNext": "Siguiente",
+                                    "sPrevious": "Anterior"
+                                },
+                                "oAria": {
+                                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                                },
+                                      
+                            },                      
+                            "columnDefs": [ {
+                                  "targets"  : 'no-sort',
+                                  "orderable": false,
+                                }],          
+                           "scrollY":        '65vh',
+                           "scrollCollapse": false,
+                           "paging":   false,
+                           "lengthMenu": [[20, 50, -1], [20, 50, "Todos"]],
+                           "autoWidth": false,           
+                           "order": [],
+                           "colReorder": true,
+                           "searching": true,
+                            "responsive": true,
+                            // dom: 'frtlip',
+                            // "dom": '<"top"i>rt<"pie"lp><"clear">',
+                             // "dom": '<"datatable_top"lf<t>"pie"ip>',
+                             "dom": "<'col-sm-12' <'row fondo_busqueda'<'col-sm-4'f><'col-sm-8'i>><'row'<tr>>>",
+
+                            initComplete: function () {
+                               // this.api().columns().every( function () {[0, 1, 9]
+                                this.api().columns([1,2,3]).every( function () {
+                                    var column = this;
+                                    var select = $('<select class="form-control"><option value="">Todos</option></select>')
+                                        .appendTo( $(column.footer()).empty() )
+                                        .on( 'change', function () {
+                                            var val = $.fn.dataTable.util.escapeRegex(
+                                                $(this).val()
+                                            );
+                     
+                                            column
+                                                .search( val ? '^'+val+'$' : '', true, false )
+                                                .draw();
+                                        } );
+                     
+                                     column.data().unique().sort().each( function ( d, j ) {
+                                    //column.cells('', column[0]).render('display').sort().unique().each( function ( d, j ){
+                                     select.append( '<option value="'+d+'">'+d+'</option>' )
+                                    } );
+                                } );
+                                
+
+                            },
+                            footerCallback: function ( row, data, start, end, display ) {
+                            var api = this.api(), data;
+                            var floatVal = function (i) {
+                                if (typeof i === "number") {
+                                    return i;
+                                } else if (typeof i === "string") {
+                                    i = i.replace(/\$/g, "");
+                                    i = i.replace(/\,/g ,"");                    
+                                    i = i.replace(/\./g, "");                    
+                                    var result = parseFloat(i)/100;
+                                    
+                                    if (isNaN(result)) {
+                                        try {
+                                            var result = $jq(i).text();
+                                            result = parseFloat(result);
+                                            if (isNaN(result)) { result = 0 };
+                                            return result * 1;
+                                        } catch (error) {
+                                            return 0;
+                                        }
+                                    } else {
+                                        return result * 1;
+                                    }
+                                } else {
+                                    alert("Unhandled type for totals [" + (typeof i) + "]");
+                                    return 0
+                                }
+                            };
+                                        
+                                                        
+                            {% if padron.tributo == 6 %}
+                            pageTotal = api.column(6, { page: 'current'} ).data().reduce( function (a, b) {return floatVal(a) + floatVal(b);}, 0 );            
+                            $( api.column(6).footer() ).html('$'+pageTotal.toLocaleString(undefined,{minimumFractionDigits:2}));                            
+                            {% endif %}
+                            pageTotal = api.column(7, { page: 'current'} ).data().reduce( function (a, b) {return floatVal(a) + floatVal(b);}, 0 );            
+                            $( api.column(7).footer() ).html('$'+pageTotal.toLocaleString(undefined,{minimumFractionDigits:2}));
+                            pageTotal = api.column(8, { page: 'current'} ).data().reduce( function (a, b) {return floatVal(a) + floatVal(b);}, 0 );            
+                            $( api.column(8).footer() ).html('$'+pageTotal.toLocaleString(undefined,{minimumFractionDigits:2}));
+
+ 
+                        }
+                        });
+                });
+    </script>
+    {% endblock main %}
+    
+
+
+    {% block menuizq %}
+        {% if padron %}
+            {% include "buscador.html" %}
+            {% if sitio.liquidacion_web != 'N' or pago_online %}
+                {% include "liq_pago.html" %}
+            {% endif %}
+            
+            {% if suscripcion %}
+                {% include "suscripcion.html" %}
+            {% endif %}
+        {% endif %}
+    {% endblock menuizq %}
