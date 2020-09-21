@@ -46,61 +46,67 @@ $("#checkall").click (function () {
     });
     $("#montoLiq").text(parseFloat(total).toFixed(2));
     $("#totalLiq").val(parseFloat(total).toFixed(2));
+    $("#totalLiqCant").val(parseFloat(cant).toFixed(2));
     $("#montoLiqCant").text(cant);
     
 }
 
 $('#generarLiq').click(function(){    
     total = parseFloat(document.getElementById("totalLiq").value).toFixed(2);  
-    
-    if (total>0)
-    {
-      
-      datos = []
-      
-      $.ajax({
-        url: "/punitoriosLiq/",
-        type: "get",
-        dataType: 'json',
-        data: {'cuotas[]': cuotas},
-        success: function(data) {
-            var $subtot = 0;
-            for(var key in data){
-              $subtot += parseFloat(data[key]);};
-           
-            $subtot = $subtot.toFixed(2);
+    cant = parseFloat(document.getElementById("totalLiqCant").value).toFixed(2);  
+    if (cant <=1){
+      alertify.alert('ATENCIÓN','¡Debe seleccionar 2 o más Cuotas!');    
+    }
+    else{
+      if (total>0)
+      {
+        idp = document.getElementById("id_padron").value
+        datos = []
+        
+        $.ajax({
+          url: "/punitoriosLiq/",
+          type: "get",
+          dataType: 'json',
+          data: {'cuotas[]': cuotas},
+          success: function(data) {
+              var $subtot = 0;
+              for(var key in data){
+                $subtot += parseFloat(data[key]);};
+             
+              $subtot = $subtot.toFixed(2);
 
-            var closable = alertify.dialog('confirm').setting('closable');
-            //grab the dialog instance and set multiple settings at once.
-            
-            alerta= alertify.dialog('confirm')
-              .set({
-                'labels':{ok:'Guardar e Imprimir', cancel:'Cancelar'},
-                'message': 'El monto de la Liquidación (punitorios al día de la fecha) es de : $ '+ $subtot ,
-                'onok': function(){ 
-                  datos = data;
-                  $.ajax({
-                    url: "/liquidacion/"+idp,
-                    type: "get",
-                    dataType: 'json',
-                    data: {'cuotas[]': cuotas},
-                    success: function(data) {
-                      // alertify.success('El monto a pagar es: $ '+ $subtot);
-                      url = "/imprimirLiqWeb/"+data;
-                      var win = window.open(url, '_blank');
-                      win.focus();
-                      
-                      location.reload();
-                        }});                  
-                },
-                'oncancel': function(){ location.reload();}
-              });
-              alerta.setHeader('Liquidación OnLine');
-              alerta.show();
-        }});
-    }else{
-         alertify.alert('ATENCIÓN','¡Debe seleccionar alguna Cuota!');    
-      }
+              var closable = alertify.dialog('confirm').setting('closable');
+              //grab the dialog instance and set multiple settings at once.
+              
+              alerta= alertify.dialog('confirm')
+                .set({
+                  'labels':{ok:'Guardar e Imprimir', cancel:'Cancelar'},
+                  'message': 'El monto total actualizado de la Liquidación es de : $ '+ $subtot ,
+                  'onok': function(){ 
+                    datos = data;
+                    $.ajax({
+                      url: "/liquidacion/"+idp,
+                      type: "get",
+                      dataType: 'json',
+                      data: {'cuotas[]': cuotas},
+                      success: function(data) {
+                        // alertify.success('El monto a pagar es: $ '+ $subtot);
+                        url = "/imprimirLiqWeb/"+data;
+                        var win = window.open(url, '_blank');
+                        win.focus();
+                        
+                        location.reload();
+                          }});                  
+                  },
+                  'oncancel': function(){ location.reload();}
+                });
+                alerta.setHeader('Liquidación OnLine');
+                alerta.show();
+          }});
+      }else{
+           alertify.alert('ATENCIÓN','¡Debe seleccionar alguna Cuota!');    
+        }
+    }
 });
 
 $('#suscribir').click(function(){    
@@ -149,11 +155,11 @@ $('#formPagos').on('submit', function(evt) {
     total = parseFloat(document.getElementById("totalLiq").value).toFixed(2);      
     if (total>0)
     {
-      idp = document.getElementById("id_padron").value
+      // idp = document.getElementById("id_padron").value
       datos = []
       
       $.ajax({
-        url: "/punitoriosLiq/"+idp,
+        url: "/punitoriosLiq/",
         type: "get",
         dataType: 'json',
         data: {'cuotas[]': cuotas},
@@ -168,7 +174,7 @@ $('#formPagos').on('submit', function(evt) {
             alerta= alertify.dialog('confirm')
               .set({
                 'labels':{ok:'Pagar', cancel:'Cancelar'},
-                'message': 'El monto total a pagar (punitorios al día de la fecha) es de : $ '+ $subtot +'<br>(recuerde que el proceso de acreditación puede demorar hasta 48hs hábiles).' ,
+                'message': 'El monto total actualizado a pagar es de : $ '+ $subtot +'<br>(recuerde que el proceso de acreditación puede demorar hasta 48hs hábiles).' ,
                 'onok': function(){ 
                   datos = data;
                   $.ajax({
@@ -188,10 +194,19 @@ $('#formPagos').on('submit', function(evt) {
                       });                      
                       var exito= document.getElementsByName("UrlExito")[0];
                       exito.value=urlExito;
+
+                      var NoComercio = data[2];
+                      var codigo= document.getElementsByName("NoComercio")[0];
+                      codigo.value=NoComercio;    
                       
                       form.submit();
+                      location.reload();
 
-                      }});                  
+                      },
+                    error: function(message) {                 
+                        console.log(message);
+                    },
+                  });                  
                 },
                 'oncancel': function(){ location.reload();}
               });

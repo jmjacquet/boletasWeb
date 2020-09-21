@@ -327,13 +327,13 @@ def punitorios(c,fecha_punitorios,importe):
 
     #si el tipo es por rango de fechas
     if tipo_interes == 3:        
-      coeficiente_acum = Decimal(coeficiente_acum).quantize(Decimal("0.0001"),decimal.ROUND_FLOOR)       
+      coeficiente_acum = Decimal(coeficiente_acum).quantize(Decimal("0.001"),decimal.ROUND_FLOOR)       
       intereses = importe * coeficiente_acum    
       coef = coeficiente_acum  
       
       
     else: #en cualquier otro caso  
-      coeficiente = Decimal(coeficiente).quantize(Decimal("0.0001"),decimal.ROUND_FLOOR) 
+      coeficiente = Decimal(coeficiente).quantize(Decimal("0.001"),decimal.ROUND_FLOOR) 
       intereses = importe * coeficiente    
       coef = coeficiente  
     

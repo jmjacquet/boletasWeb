@@ -126,7 +126,7 @@ font-size: 11px;
 
 .datagrid table tbody tr:last-child td { border-bottom: none; }
 .datagrid table tfoot td div { border-top: 1px solid #006699;}
-.datagrid table tfoot td { padding: 5px; font-size: 11px;background-color:#428bca;
+.datagrid table tfoot td { padding: 5px; background-color:#428bca;
 	color:#FFFFFF;font-weight: bold; }
 .datagrid table tfoot td div{ padding: 2px; }
 .datagrid table tfoot td ul { margin: 0; padding:0; list-style: none; text-align: right; }

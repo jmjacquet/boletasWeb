@@ -8,11 +8,11 @@ DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-         'NAME': MUNI_DB,           # Or path to database file if using sqlite3.
-        'USER': DB_USER,           # Not used with sqlite3.
-        'PASSWORD': DB_PASSWORD,               # Not used with sqlite3.
+        'NAME': MUNI_DB,           # Or path to database file if using sqlite3.
+        'USER': 'gg',                      # Not used with sqlite3.
+        'PASSWORD': 'battlehome',            # Not used with sqlite3.
         'HOST': 'localhost',                   # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',                      # Set to empty string for default.
+        'PORT': '3308',                      # Set to empty string for default.
         'OPTIONS':{
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
@@ -30,9 +30,9 @@ if TESTING: #Covers regular testing and django-coverage
             }
         }
 
-# MIDDLEWARE += [
-#     'debug_toolbar.middleware.DebugToolbarMiddleware',#Barra DEBUG    
-# ]
+MIDDLEWARE += [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',#Barra DEBUG    
+]
 
 INSTALLED_APPS += [
     'rest_framework',
@@ -40,8 +40,9 @@ INSTALLED_APPS += [
     'rest_framework_swagger',
     'corsheaders',
     'api',
-    # 'debug_toolbar',        
+    'debug_toolbar',        
 ]
+
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -56,9 +57,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
-    'DATE_FORMAT':  '%d/%m/%Y',
-    'DATETIME_FORMAT': '%d/%m/%Y %H:%M:%S',        
-    'DATE_INPUT_FORMATS' : ['%d/%m/%Y'],
+    'DATE_FORMAT': '%d/%m/%Y',
+    'DATETIME_FORMAT': '%d/%m/%Y %H:%M:%S',    
+    'DATE_INPUT_FORMATS': ['%d/%m/%Y'],
     
 }
 

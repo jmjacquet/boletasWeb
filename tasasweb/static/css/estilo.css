@@ -151,9 +151,6 @@ transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 .loading img{width:70px}
 
 
-.formularios {        
-  font-size: 12px;
-}
 
 
 
@@ -278,7 +275,7 @@ div.dt-buttons{position:relative;float:right !important;text-align: center;width
 .barra_titulo
 {
     text-align:center;
-    padding: 3px;
+    padding: 5px;
     font-size: 14px;    
     background-color: #428bca;
     border-color: #428bca;    
@@ -383,3 +380,16 @@ div.dataTables_wrapper div.dataTables_info{text-align:right;
 .cargando{position:absolute;left:0;top:0;bottom:0;right:0;background:#000;opacity:0.6;filter:alpha(opacity=80);z-index:1099;}
 .cargando-img{width:64px;height:64px;position:absolute;top:40%;left:45%;margin:-32px 0 0 -32px;}
 .cargando-txt{position:absolute;top:40%;left:50%;margin:-10px 0 0 -30px;color: white;font-weight: bold;}
+
+
+.formularios {        
+  font-size: 11px;
+}
+
+.formulario_total{
+  font-size: 16px; 
+  font-weight: bold;
+}
+.separacion{
+  margin-top: 10px;
+}
