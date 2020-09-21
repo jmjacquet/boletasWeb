@@ -1,20 +1,10 @@
 # -*- coding: utf-8 -*-
-
 import os
-
+from decouple import config
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-from django.core.exceptions import ImproperlyConfigured
-def get_env_variable(var_name):
-    """ Get the environment variable or return exception """
-    try:
-        return os.environ[var_name]
-    except KeyError:
-        error_msg = "Set the %s environment variable" % var_name
-        raise ImproperlyConfigured(error_msg)   
-
-SECRET_KEY = 'if=vlwbutu#*s(-^6_yuuczpd01r#=riz#9l6^041%$fk9j58w'
+SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -83,15 +73,15 @@ WSGI_APPLICATION = 'tasasweb.wsgi.application'
 MUNI_ID = os.environ.get("MUNI_ID", "000")
 MUNI_DB = os.environ.get("MUNI_DB", "")
 MUNI_DIR = os.environ.get("MUNI_DIR", "")
-MUNI_DB_PASSWD = os.environ.get("MUNI_DB_PASSWD", "")
-
+DB_USER = config("DB_USER")
+DB_PASS = config("DB_PASS")
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': MUNI_DB,           # Or path to database file if using sqlite3.
-        'USER': 'gg',                      # Not used with sqlite3.
-        'PASSWORD': MUNI_DB_PASSWD,            # Not used with sqlite3.
+        'USER': DB_USER,                      # Not used with sqlite3.
+        'PASSWORD': DB_PASS,            # Not used with sqlite3.
         'HOST': 'www.boletaweb.com.ar',                   # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default.
         'OPTIONS':{
@@ -150,7 +140,7 @@ LOGIN_REDIRECT_URL='/'
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend','tadese.authentication.ContribuyentesBackend','tadese.authentication.EstudiosBackend','tadese.authentication.idCuotaBackend')
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_NAME = "grupogua"
+SESSION_COOKIE_NAME = config('SESSION_COOKIE_NAME', default='')
 SESSION_COOKIE_AGE = 86400
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
@@ -171,12 +161,14 @@ INTERNAL_IPS = [
     '127.0.0.1',    
 ]
 
-EMAIL_HOST = 'smtp.webfaction.com'
-EMAIL_HOST_USER = 'grupogua_errores'
-EMAIL_HOST_PASSWORD = 'Sarasa1616'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 SERVER_EMAIL = 'errores_web@grupoguadalupe.com.ar'
 DEFAULT_FROM_EMAIL = 'errores_web@grupoguadalupe.com.ar'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = config('EMAIL_HOST', default='localhost')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 
 LOGGING = {
    'version': 1,
